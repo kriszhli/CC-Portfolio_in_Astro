@@ -1,0 +1,28 @@
+# build output
+dist/
+node_modules/
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment
+.env
+.env.production
+.env.local
+.env.development
+.env.test
+
+# Astro files
+.astro/
