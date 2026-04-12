@@ -1,0 +1,125 @@
+---
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+
+// Asset Imports
+import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson Plan - Ms. Cici Qiao</title>
+</head>
+<body>
+  <div id="custom-cursor"></div>
+  <div class="diorama-wrapper">
+    <!-- Reusing the diorama layout engine from the homepage -->
+    <div class="diorama" style={`background-image: url('${LessonPlanPageBg.src}');`}>
+      
+      <!-- Back Button -->
+      <!-- Added a simple absolute positioned button to return home -->
+      <a href={import.meta.env.BASE_URL} class="back-button interactive-element">
+        <span>← Back to Desk</span>
+      </a>
+
+      <!-- Content goes here -->
+
+    </div>
+  </div>
+
+  <style is:global>
+    /* Custom cursor — only on devices that support hover (real mouse/trackpad) */
+    @media (hover: hover) and (pointer: fine) {
+      * {
+        cursor: none !important;
+      }
+
+      #custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.84);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: width 0.2s, height 0.2s, background-color 0.2s;
+      }
+
+      body.hovering-link #custom-cursor {
+        width: 20px;
+        height: 20px;
+        background-color: transparent;
+        border: 3px solid white;
+      }
+    }
+
+    /* Hide cursor element entirely on touch/mobile */
+    @media (hover: none), (pointer: coarse) {
+      #custom-cursor {
+        display: none;
+      }
+    }
+
+    .back-button {
+      position: absolute;
+      top: 5%;
+      left: 3%;
+      z-index: 50;
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: rgba(255, 255, 255, 0.85);
+      color: #6d4c41;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: 3px solid rgba(255, 255, 255, 1);
+      transition: all 0.2s ease-out;
+    }
+
+    .back-button:hover {
+      background-color: #6d4c41;
+      color: white;
+      transform: scale(1.05);
+      border-color: #6d4c41;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Only attach mouse-driven effects on non-touch devices
+      const isTouchDevice =
+        window.matchMedia('(hover: none), (pointer: coarse)').matches ||
+        navigator.maxTouchPoints > 0;
+
+      if (!isTouchDevice) {
+        const customCursor = document.getElementById('custom-cursor');
+        const interactiveElements = document.querySelectorAll('.interactive-element');
+
+        document.addEventListener('mousemove', (e) => {
+          if (customCursor) {
+            customCursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+          }
+        });
+
+        interactiveElements.forEach(el => {
+          el.addEventListener('mouseenter', () => {
+            document.body.classList.add('hovering-link');
+          });
+          el.addEventListener('mouseleave', () => {
+            document.body.classList.remove('hovering-link');
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
