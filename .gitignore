@@ -26,3 +26,6 @@ lerna-debug.log*
 
 # Astro files
 .astro/
+
+# Local backup
+Local_Backup/
