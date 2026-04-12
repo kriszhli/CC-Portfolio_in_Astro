@@ -22,16 +22,16 @@ const positionStyles = [
                 left 0.6s cubic-bezier(0.4, 0, 0.2, 1),
                 width 0.8s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .base-img, .hover-img {
     filter:
       drop-shadow(2px 3px 0px rgba(0, 0, 0, 0.55))
       drop-shadow(5px 7px 1px rgba(0, 0, 0, 0.35))
       drop-shadow(10px 14px 3px rgba(0, 0, 0, 0.2))
       drop-shadow(18px 22px 6px rgba(0, 0, 0, 0.1))
-      drop-shadow(26px 30px 10px rgba(0, 0, 0, 0.05))
-      brightness(1.05) contrast(1.1) saturate(1.2) sepia(0.1);
+      drop-shadow(26px 30px 10px rgba(0, 0, 0, 0.05));
+  }
+
+  .base-img, .hover-img {
+    filter: brightness(1.05) contrast(1.1) saturate(1.2) sepia(0.1);
   }
 
   .interactive-element:hover .hover-img {
