@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-const { id, href, top, bottom, left, right, width, alt, imgSrc, hoverImgSrc, group, hoverScale = 1.2, rotation = '0deg' } = Astro.props;
+const { id, href, top, bottom, left, right, width, alt, imgSrc, hoverImgSrc, group, hoverScale = 1.2, rotation = '0deg', brightness = 1.05 } = Astro.props;
 
 const positionStyles = [
   top ? `top: ${top}` : '',
@@ -9,7 +9,7 @@ const positionStyles = [
   right ? `right: ${right}` : ''
 ].filter(Boolean).join('; ');
 ---
-<a id={id} href={href} class={`diorama-element interactive-element ${group || ''}`} style={`${positionStyles}; width: ${width}; --hover-scale: ${hoverScale}; --rotation: ${rotation}; display: block; z-index: 10; cursor: pointer; text-decoration: none;`}>
+<a id={id} href={href} class={`diorama-element interactive-element ${group || ''}`} style={`${positionStyles}; width: ${width}; --hover-scale: ${hoverScale}; --rotation: ${rotation}; --brightness: ${brightness}; display: block; z-index: 10; cursor: pointer; text-decoration: none;`}>
   <Image src={imgSrc} alt={alt} loading="eager" fetchpriority="high" class="base-img" style="width: 100%; height: auto; display: block; position: relative; z-index: 2; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);" />
   <Image src={hoverImgSrc} alt={`${alt} Hover`} loading="eager" fetchpriority="high" class="hover-img" style="width: 100%; height: auto; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0; transform: scale(0.5); transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);" />
 </a>
@@ -23,15 +23,15 @@ const positionStyles = [
                 width 0.8s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     filter:
-      drop-shadow(2px 3px 0px rgba(0, 0, 0, 0.55))
-      drop-shadow(5px 7px 1px rgba(0, 0, 0, 0.35))
-      drop-shadow(10px 14px 3px rgba(0, 0, 0, 0.2))
-      drop-shadow(18px 22px 6px rgba(0, 0, 0, 0.1))
-      drop-shadow(26px 30px 10px rgba(0, 0, 0, 0.05));
+      drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5))
+      drop-shadow(6px 5px 1px rgba(0, 0, 0, 0.4))
+      drop-shadow(16px 14px 3px rgba(0, 0, 0, 0.3))
+      drop-shadow(26px 22px 6px rgba(0, 0, 0, 0.2))
+      drop-shadow(37px 32px 10px rgba(0, 0, 0, 0.15));
   }
 
   .base-img, .hover-img {
-    filter: brightness(1.05) contrast(1.1) saturate(1.2) sepia(0.1);
+    filter: brightness(var(--brightness)) contrast(1.1) saturate(1.2) sepia(0.1);
   }
 
   .interactive-element:hover .hover-img {
