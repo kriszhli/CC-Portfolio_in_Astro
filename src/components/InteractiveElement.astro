@@ -2,6 +2,9 @@
 import { Image } from 'astro:assets';
 const { id, href, top, bottom, left, right, width, alt, imgSrc, hoverImgSrc, group, hoverScale = 1.2, rotation = '0deg', brightness = 1.05 } = Astro.props;
 
+// BASE_URL has no trailing slash; href has a leading slash — concatenate directly
+const resolvedHref = href.startsWith('/') ? `${import.meta.env.BASE_URL}${href}` : href;
+
 const positionStyles = [
   top ? `top: ${top}` : '',
   bottom ? `bottom: ${bottom}` : '',
@@ -9,7 +12,7 @@ const positionStyles = [
   right ? `right: ${right}` : ''
 ].filter(Boolean).join('; ');
 ---
-<a id={id} href={href} class={`diorama-element interactive-element ${group || ''}`} style={`${positionStyles}; width: ${width}; --hover-scale: ${hoverScale}; --rotation: ${rotation}; --brightness: ${brightness}; display: block; z-index: 10; cursor: pointer; text-decoration: none;`}>
+<a id={id} href={resolvedHref} class={`diorama-element interactive-element ${group || ''}`} style={`${positionStyles}; width: ${width}; --hover-scale: ${hoverScale}; --rotation: ${rotation}; --brightness: ${brightness}; display: block; z-index: 10; cursor: pointer; text-decoration: none;`}>
   <Image src={imgSrc} alt={alt} loading="eager" fetchpriority="high" class="base-img" style="width: 100%; height: auto; display: block; position: relative; z-index: 2; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);" />
   <Image src={hoverImgSrc} alt={`${alt} Hover`} loading="eager" fetchpriority="high" class="hover-img" style="width: 100%; height: auto; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0; transform: scale(0.5); transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);" />
 </a>
