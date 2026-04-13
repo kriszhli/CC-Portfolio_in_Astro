@@ -344,27 +344,33 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
       const interactiveElements = document.querySelectorAll('.interactive-element');
 
-      // Only attach mouse-driven effects on non-touch devices
       const isTouchDevice =
         window.matchMedia('(hover: none), (pointer: coarse)').matches ||
         navigator.maxTouchPoints > 0;
 
       if (!isTouchDevice) {
         const customCursor = document.getElementById('custom-cursor');
+        let mouseX = 0, mouseY = 0;
+        let rafPending = false;
 
-        document.addEventListener('mousemove', (e) => {
-          if (customCursor) {
-            customCursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
-          }
+        // Cache element centers to prevent layout thrashing on every pixel of mouse movement
+        let elementCenters = [];
+        const cacheElementCenters = () => {
+          elementCenters = Array.from(interactiveElements).map(el => {
+            const rect = el.getBoundingClientRect();
+            return { el, cx: rect.left + rect.width / 2, cy: rect.top + rect.height / 2 };
+          });
+        };
+        cacheElementCenters();
+        window.addEventListener('resize', cacheElementCenters);
 
+        const runPhysics = () => {
+          rafPending = false;
           if (document.body.classList.contains('resume-view')) return;
 
           const isHovering = document.body.classList.contains('hovering-link');
 
-          const mouseX = e.clientX;
-          const mouseY = e.clientY;
-
-          interactiveElements.forEach(el => {
+          elementCenters.forEach(({ el, cx, cy }) => {
             if (isHovering) {
               el.style.setProperty('--pull-x', '0px');
               el.style.setProperty('--pull-y', '0px');
@@ -372,23 +378,16 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
               return;
             }
 
-            const rect = el.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            const dx = mouseX - centerX;
-            const dy = mouseY - centerY;
+            const dx = mouseX - cx;
+            const dy = mouseY - cy;
             const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
             const influenceRadius = 600;
-            let pullX = 0;
-            let pullY = 0;
-            let pullScale = 1;
+            let pullX = 0, pullY = 0, pullScale = 1;
 
             if (dist < influenceRadius) {
               const strength = Math.pow(1 - (dist / influenceRadius), 2);
               const intensity = 25;
-
               pullX = (dx / dist) * (strength * intensity);
               pullY = (dy / dist) * (strength * intensity);
               pullScale = 1 + (strength * 0.05);
@@ -398,10 +397,20 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
             el.style.setProperty('--pull-y', `${pullY}px`);
             el.style.setProperty('--pull-scale', pullScale);
           });
-        });
-      }
+        };
 
-      if (!isTouchDevice) {
+        document.addEventListener('mousemove', (e) => {
+          if (customCursor) {
+            customCursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+          }
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(runPhysics);
+          }
+        });
+
         interactiveElements.forEach(el => {
           el.addEventListener('mouseenter', () => {
             document.body.classList.add('hovering-link');
@@ -416,19 +425,12 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
             groupElements.forEach(otherEl => {
               if (otherEl !== el) {
                 const rectOther = otherEl.getBoundingClientRect();
-                const otherCX = rectOther.left + rectOther.width / 2;
-                const otherCY = rectOther.top + rectOther.height / 2;
-
-                const dx = otherCX - centerX;
-                const dy = otherCY - centerY;
+                const dx = (rectOther.left + rectOther.width / 2) - centerX;
+                const dy = (rectOther.top + rectOther.height / 2) - centerY;
                 const distance = Math.sqrt(dx * dx + dy * dy) || 1;
-
                 const pushDistance = 45;
-                const pushX = (dx / distance) * pushDistance;
-                const pushY = (dy / distance) * pushDistance;
-
-                otherEl.style.setProperty('--repel-x', `${pushX}px`);
-                otherEl.style.setProperty('--repel-y', `${pushY}px`);
+                otherEl.style.setProperty('--repel-x', `${(dx / distance) * pushDistance}px`);
+                otherEl.style.setProperty('--repel-y', `${(dy / distance) * pushDistance}px`);
                 otherEl.style.setProperty('--repel-scale', '0.75');
               }
             });
@@ -439,8 +441,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
             const groupClassMatch = Array.from(el.classList).find(c => c.startsWith('group-'));
             if (!groupClassMatch) return;
 
-            const groupElements = document.querySelectorAll('.' + groupClassMatch);
-            groupElements.forEach(otherEl => {
+            document.querySelectorAll('.' + groupClassMatch).forEach(otherEl => {
               if (otherEl !== el) {
                 otherEl.style.setProperty('--repel-x', '0px');
                 otherEl.style.setProperty('--repel-y', '0px');
