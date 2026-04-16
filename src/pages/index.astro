@@ -441,12 +441,9 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Cancel desktop resume-view positioning — keep button at its mobile spot */
+      /* Override desktop positioning; let keyframe handle top/left translation */
       body.resume-view #resume-btn {
-        top: 13% !important;
-        left: 50% !important;
         width: 42% !important;
         transform: rotate(5deg) !important;
         animation: mobileBtnOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
@@ -471,19 +468,27 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
     /* Button open: fade out while moving from its position toward center */
     @keyframes mobileBtnOpen {
       0% {
+        top: 13%;
+        left: 50%;
         opacity: 1;
       }
       100% {
+        top: 50%;
+        left: 50%;
         opacity: 0;
       }
     }
 
-    /* Button close: fade back in */
+    /* Button close: fade back in while returning to original position */
     @keyframes mobileBtnClose {
       0% {
+        top: 50%;
+        left: 50%;
         opacity: 0;
       }
       100% {
+        top: 13%;
+        left: 50%;
         opacity: 1;
       }
     }
