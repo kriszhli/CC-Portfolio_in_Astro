@@ -445,9 +445,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
 
     /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Button uses keyframe to move to center and fade out */
+      /* Button fades via JS Web Animations API on mobile */
       body.resume-view #resume-btn {
-        animation: mobileBtnOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         pointer-events: none !important;
       }
 
@@ -456,45 +455,12 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         z-index: 50 !important;
       }
       
-      body.transitioning-back #resume-btn {
-        animation: mobileBtnClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-      }
-
       body.transitioning-back #pdf-container {
         animation: mobilePdfClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         z-index: 50 !important;
       }
     }
 
-    /* Button open: move from button position to center while fading out */
-    @keyframes mobileBtnOpen {
-      0% {
-        top: 13%;
-        left: 50%;
-        width: 42%;
-        opacity: 1;
-      }
-      100% {
-        top: 40%;
-        left: 30%;
-        width: 42%;
-        opacity: 0;
-      }
-    }
-
-    /* Button close: fade back in from center to original position */
-    @keyframes mobileBtnClose {
-      0% {
-        top: 40%;
-        left: 30%;
-        opacity: 0;
-      }
-      100% {
-        top: 13%;
-        left: 50%;
-        opacity: 1;
-      }
-    }
 
     /* PDF open: from button position to center, fading in */
     @keyframes mobilePdfOpen {
@@ -543,12 +509,33 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       const resumeBtn = document.getElementById('resume-btn');
       const closeResumeBtn = document.getElementById('close-resume');
       const pdfContainer = document.getElementById('pdf-container');
+      const isMobile = () => window.innerWidth <= 768;
+
+      // Animate button on mobile using Web Animations API (bypasses CSS !important)
+      let btnAnimation = null;
+      const animateBtnToCenter = () => {
+        if (!isMobile() || !resumeBtn) return;
+        btnAnimation = resumeBtn.animate([
+          { opacity: 1, transform: 'rotate(5deg)' },
+          { opacity: 0, transform: 'translate(-20%, 80%) scale(0.5) rotate(0deg)' }
+        ], { duration: 700, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
+      };
+      const animateBtnBack = () => {
+        if (!isMobile() || !resumeBtn) return;
+        if (btnAnimation) { btnAnimation.cancel(); btnAnimation = null; }
+        btnAnimation = resumeBtn.animate([
+          { opacity: 0, transform: 'translate(-20%, 80%) scale(0.5) rotate(0deg)' },
+          { opacity: 1, transform: 'rotate(5deg)' }
+        ], { duration: 700, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
+        btnAnimation.onfinish = () => { btnAnimation.cancel(); btnAnimation = null; };
+      };
 
       if(resumeBtn && closeResumeBtn && pdfContainer) {
         
         const closeResumeView = () => {
           document.body.classList.remove('resume-view');
           document.body.classList.add('transitioning-back');
+          animateBtnBack();
           setTimeout(() => document.body.classList.remove('transitioning-back'), 800);
         };
 
@@ -557,6 +544,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
           if (document.body.classList.contains('resume-view')) {
             closeResumeView();
           } else {
+            animateBtnToCenter();
             document.body.classList.add('resume-view');
           }
         });
