@@ -192,8 +192,12 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
     /* Mobile Overrides */
     @media (max-width: 768px) {
       .diorama {
-        flex-direction: column;
-        justify-content: flex-start;
+        max-width: none !important;
+        max-height: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-size: cover !important;
+        background-position: center bottom !important;
       }
       
       #title-graphic {
