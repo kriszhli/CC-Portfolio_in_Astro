@@ -367,11 +367,13 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       transform: translateY(-100px) !important;
     }
 
-    body.resume-view #resume-btn {
-      top: 4% !important;
-      left: 3% !important;
-      width: 15% !important;
-      transform: none !important;
+    @media (min-width: 769px) {
+      body.resume-view #resume-btn {
+        top: 4% !important;
+        left: 3% !important;
+        width: 15% !important;
+        transform: none !important;
+      }
     }
 
     body.resume-view #resume-btn .hover-img {
@@ -441,11 +443,10 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
+    /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Override desktop positioning; let keyframe handle top/left translation */
+      /* Button uses keyframe to move to center and fade out */
       body.resume-view #resume-btn {
-        width: 42% !important;
-        transform: rotate(5deg) !important;
         animation: mobileBtnOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         pointer-events: none !important;
       }
@@ -465,25 +466,27 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* Button open: fade out while moving from its position toward center */
+    /* Button open: move from button position to center while fading out */
     @keyframes mobileBtnOpen {
       0% {
         top: 13%;
         left: 50%;
+        width: 42%;
         opacity: 1;
       }
       100% {
-        top: 50%;
-        left: 50%;
+        top: 40%;
+        left: 30%;
+        width: 42%;
         opacity: 0;
       }
     }
 
-    /* Button close: fade back in while returning to original position */
+    /* Button close: fade back in from center to original position */
     @keyframes mobileBtnClose {
       0% {
-        top: 50%;
-        left: 50%;
+        top: 40%;
+        left: 30%;
         opacity: 0;
       }
       100% {
