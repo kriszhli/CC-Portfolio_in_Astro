@@ -20,6 +20,7 @@ import RecHover from '../assets/PNGs/Rec_Hover.png';
 import Cred from '../assets/PNGs/Cred.png';
 import CredHover from '../assets/PNGs/Cred_Hover.png';
 import ResumeDoc from '../assets/PNGs/Resume_doc.png';
+import CursorImg from '../assets/PNGs/cursor.png';
 ---
 
 <!DOCTYPE html>
@@ -32,7 +33,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
   <meta name="description" content="Ms. Cici Qiao Portfolio Landing Page" />
 </head>
 <body>
-  <div id="custom-cursor"></div>
+  <Image id="custom-cursor" src={CursorImg} alt="cursor" loading="eager" />
   <div class="diorama-wrapper">
     <div class="diorama">
 
@@ -157,21 +158,25 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         position: fixed;
         top: 0;
         left: 0;
-        width: 20px;
-        height: 20px;
-        background-color: rgba(255, 255, 255, 0.84);
-        border-radius: 50%;
+        width: 38px;
+        height: auto;
         pointer-events: none;
         z-index: 99999;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transition: width 0.2s, height 0.2s, background-color 0.2s;
+        /* Same shadow as InteractiveElement buttons */
+        filter:
+          drop-shadow(3px 2px 1px rgba(0, 0, 0, 0.8))
+          drop-shadow(10px 7px 4px rgba(0, 0, 0, 0.55))
+          drop-shadow(20px 16px 6px rgba(0, 0, 0, 0.15));
+        transition: transform 0.05s linear, width 0.2s, filter 0.2s;
       }
 
       body.hovering-link #custom-cursor {
-        width: 20px;
-        height: 20px;
-        background-color: transparent;
-        border: 3px solid white;
+        width: 44px;
+        filter:
+          brightness(1.15)
+          drop-shadow(3px 2px 1px rgba(0, 0, 0, 0.8))
+          drop-shadow(10px 7px 4px rgba(0, 0, 0, 0.55))
+          drop-shadow(20px 16px 6px rgba(0, 0, 0, 0.15));
       }
     }
 
@@ -519,7 +524,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
 
         document.addEventListener('mousemove', (e) => {
           if (customCursor) {
-            customCursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+            // Set offset to 0 so the pointer aligns with the top-left tip of the cursor PNG
+            customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
           }
           mouseX = e.clientX;
           mouseY = e.clientY;
