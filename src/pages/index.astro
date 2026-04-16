@@ -443,8 +443,12 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
 
     /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Both use keyframe animations with identical paths for a seamless morph */
+      /* Cancel desktop resume-view positioning — keep button at its mobile spot */
       body.resume-view #resume-btn {
+        top: 13% !important;
+        left: 50% !important;
+        width: 42% !important;
+        transform: rotate(5deg) !important;
         animation: mobileBtnOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         pointer-events: none !important;
       }
