@@ -141,7 +141,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
         </button>
-        <div style="padding: 40px; font-family: serif; color: #333; line-height: 1.6; height: 100%; box-sizing: border-box; background: #faf9f6;">
+        <div style="padding: 40px; font-family: serif; color: #333; line-height: 1.6; height: 100%; box-sizing: border-box; background: #faf9f6; overflow-y: auto; overflow-x: hidden; border-radius: 6px;">
           <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">Cici Qiao - Resume</h2>
           <p><strong>Education:</strong><br/>▪ Degree program placeholder.<br/>▪ University placeholder text.</p>
           <br/>
@@ -312,9 +312,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       border-radius: 12px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       border: 6px solid #6d4c41; 
-      overflow-y: auto; 
-      scrollbar-width: thin; 
-      scrollbar-color: #333 transparent;
+      /* removed overflow-y so absolute buttons can float outside */
     }
     
     #close-resume {
