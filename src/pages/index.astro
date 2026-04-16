@@ -106,6 +106,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       />
 
       <InteractiveElement 
+        id="rec-btn"
         href="/recommendations" 
         group="group-2"
         top="26%" 
@@ -144,6 +145,8 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
     </div>
   </div>
+
+  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.6s ease;"></div>
 
   <style is:global>
     /* Custom cursor — only on devices that support hover (real mouse/trackpad) */
@@ -457,6 +460,48 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
               }
             });
           });
+        });
+      }
+
+      // --- Recommendation Button Animation ---
+      const recBtn = document.getElementById('rec-btn');
+      const fadeOverlay = document.getElementById('white-fade-overlay');
+
+      if (recBtn) {
+        recBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetHref = recBtn.getAttribute('href');
+          
+          // Force active state styles for dramatic zoom
+          recBtn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          recBtn.style.zIndex = '9998';
+          
+          // Calculate distance to center
+          const rect = recBtn.getBoundingClientRect();
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          const btnCenterX = rect.left + rect.width / 2;
+          const btnCenterY = rect.top + rect.height / 2;
+          
+          const moveX = centerX - btnCenterX;
+          const moveY = centerY - btnCenterY;
+          
+          // Disable physics temporarily so it doesn't fight the pull 
+          recBtn.style.pointerEvents = 'none';
+          document.body.style.pointerEvents = 'none';
+          
+          // Apply zoom & translation
+          recBtn.style.transform = `translate(${moveX}px, ${moveY}px) scale(8)`;
+
+          // Trigger fade a moment later
+          setTimeout(() => {
+            fadeOverlay.style.opacity = '1';
+          }, 150);
+
+          // Navigate after fade completes
+          setTimeout(() => {
+            window.location.href = targetHref;
+          }, 650);
         });
       }
     });
