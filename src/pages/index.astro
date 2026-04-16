@@ -261,9 +261,6 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         width: 85% !important;
         height: auto !important;
         aspect-ratio: 8.5 / 11 !important;
-        /* Start position matches resume button center (top:13% left:71% = left:50% + width:42%/2) */
-        top: 13% !important;
-        left: 71% !important;
         z-index: 50 !important;
       }
 
@@ -446,41 +443,53 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
 
     /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Resume button animates to center while fading out */
+      /* Both use keyframe animations with identical paths for a seamless morph */
       body.resume-view #resume-btn {
-        opacity: 0 !important;
+        animation: mobileBtnOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         pointer-events: none !important;
-        top: 50% !important;
-        left: 50% !important;
-        width: 85% !important;
-        transform: translate(-50%, -50%) !important;
-        transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
       }
 
-      /* PDF follows exact same path but fades IN */
       body.resume-view #pdf-container {
         animation: mobilePdfOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         z-index: 50 !important;
       }
       
+      body.transitioning-back #resume-btn {
+        animation: mobileBtnClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+      }
+
       body.transitioning-back #pdf-container {
         animation: mobilePdfClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         z-index: 50 !important;
       }
+    }
 
-      /* Button reverses path when closing */
-      body.transitioning-back #resume-btn {
-        opacity: 1 !important;
-        transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    /* Button open: fade out while moving from its position toward center */
+    @keyframes mobileBtnOpen {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
       }
     }
 
-    /* Mobile PDF open: same path as button (from button pos to center), opacity 0→1 */
+    /* Button close: fade back in */
+    @keyframes mobileBtnClose {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* PDF open: from button position to center, fading in */
     @keyframes mobilePdfOpen {
       0% {
-        top: 13%;
+        top: 25%;
         left: 71%;
-        transform: translate(-50%, -50%) scale(0.15);
+        transform: translate(-50%, -50%) scale(0.1);
         opacity: 0;
       }
       100% {
@@ -491,7 +500,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* Mobile PDF close: reverse path (from center back to button pos), opacity 1→0 */
+    /* PDF close: from center back to button position, fading out */
     @keyframes mobilePdfClose {
       0% {
         top: 50%;
@@ -500,9 +509,9 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         opacity: 1;
       }
       100% {
-        top: 13%;
+        top: 25%;
         left: 71%;
-        transform: translate(-50%, -50%) scale(0.15);
+        transform: translate(-50%, -50%) scale(0.1);
         opacity: 0;
       }
     }
