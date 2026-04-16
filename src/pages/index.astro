@@ -202,67 +202,60 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       #title-graphic {
         top: 6% !important;
         left: 10% !important;
-        height: 12% !important;
-        width: auto !important;
+        width: 80% !important;
       }
       
+      /* Person graphic base positioning for portrait */
       #person-graphic {
         top: auto !important;
-        bottom: 0 !important;
-        left: 15% !important;
-        height: 50% !important;
-        width: auto !important;
+        bottom: 3% !important;
+        left: 13% !important;
+        width: 80% !important;
+        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
 
       /* Scatter buttons on top half */
       #resume-btn {
         top: 13% !important;
         left: 50% !important;
-        height: 12% !important;
-        width: auto !important;
+        width: 42% !important;
       }
       
       #btn-stuwork {
         top: 13% !important;
         left: 8% !important;
-        height: 10% !important;
-        width: auto !important;
+        width: 40% !important;
       }
       
       #btn-lessonplan {
         top: 30% !important;
         left: 48% !important;
-        height: 12% !important;
-        width: auto !important;
+        width: 45% !important;
       }
       
       #btn-video {
         top: auto !important;
-        left: 46% !important;
-        bottom: 1% !important;
-        height: 12% !important;
-        width: auto !important;
+        left: 48% !important;
+        bottom: 4% !important;
+        width: 38% !important;
       }
       
       #btn-philosophy {
         top: 50% !important;
         left: 13% !important;
-        height: 12% !important;
-        width: auto !important;
+        width: 38% !important;
       }
       
       #rec-btn {
         top: 31% !important;
         left: 8% !important;
-        height: 10% !important;
-        width: auto !important;
+        width: 40% !important;
       }
       
       #btn-credentials {
         top: 50% !important;
         left: 50% !important;
-        height: 12% !important;
-        width: auto !important;
+        width: 40% !important;
       }
 
       /* PDF Modal Mobile — letter-size aspect ratio, no padding, no scroll */
@@ -288,7 +281,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       body.resume-view #person-graphic {
         opacity: 0 !important;
         pointer-events: none !important;
-        transform: scale(0.8) translateY(100px) !important;
+        transform: scale(0.5) translateY(200px) !important;
+        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
 
       #resume-btn .hover-img {
@@ -400,11 +394,13 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       transition: opacity 0.15s ease, transform 0.15s ease !important;
     }
 
-    body.resume-view #person-graphic {
-      left: 75% !important;
-      bottom: -2% !important;
-      width: 27% !important;
-      opacity: 0.9 !important;
+    @media (orientation: landscape) {
+      body.resume-view #person-graphic {
+        left: 75% !important;
+        bottom: -2% !important;
+        width: 27% !important;
+        opacity: 0.9 !important;
+      }
     }
 
     body.resume-view #pdf-container {
