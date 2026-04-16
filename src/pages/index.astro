@@ -188,8 +188,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* Mobile Overrides */
-    @media (max-width: 768px) {
+    /* Mobile Overrides (Portrait Orientation) */
+    @media (orientation: portrait) {
       .diorama {
         max-width: none !important;
         max-height: none !important;
@@ -371,7 +371,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       transform: translateY(-100px) !important;
     }
 
-    @media (min-width: 769px) {
+    @media (orientation: landscape) {
       body.resume-view #resume-btn {
         top: 4% !important;
         left: 3% !important;
@@ -408,7 +408,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       pointer-events: none !important;
     }
 
-    @media (min-width: 769px) {
+    @media (orientation: landscape) {
       body.resume-view #pdf-container {
         animation: slideOutAndZoom 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
       }
@@ -447,8 +447,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* Force Mobile Animation Precedence */
-    @media (max-width: 768px) {
+    /* Force Mobile Animation Precedence (Portrait) */
+    @media (orientation: portrait) {
       /* Button fades via JS Web Animations API on mobile */
       body.resume-view #resume-btn {
         pointer-events: none !important;
@@ -475,7 +475,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         opacity: 0;
       }
       30% {
-        opacity: 0.7;
+        opacity: 0.9;
       }
       100% {
         top: 50%;
@@ -494,7 +494,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         opacity: 1;
       }
       70% {
-        opacity: 1;
+        opacity: 0.1;
       }
       100% {
         top: 25%;
@@ -519,7 +519,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       const resumeBtn = document.getElementById('resume-btn');
       const closeResumeBtn = document.getElementById('close-resume');
       const pdfContainer = document.getElementById('pdf-container');
-      const isMobile = () => window.innerWidth <= 768;
+      const isMobile = () => window.innerHeight > window.innerWidth;
 
       if(resumeBtn && closeResumeBtn && pdfContainer) {
         
@@ -543,7 +543,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
           } else {
             // On mobile: set inline !important styles to fade + shift button
             if (isMobile()) {
-              resumeBtn.style.setProperty('transition', 'opacity 0.7s cubic-bezier(0.2,0.8,0.2,1), transform 0.7s cubic-bezier(0.2,0.8,0.2,1)', 'important');
+              resumeBtn.style.setProperty('transition', 'opacity 0.7s cubic-bezier(0.2,0.5,0.2,1), transform 0.7s cubic-bezier(0.2,0.8,0.2,1)', 'important');
               requestAnimationFrame(() => {
                 resumeBtn.style.setProperty('opacity', '0', 'important');
                 resumeBtn.style.setProperty('transform', 'translate(-20%, 80%) scale(2)', 'important');
