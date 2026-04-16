@@ -215,45 +215,45 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
       /* Scatter buttons on top half */
       #resume-btn {
-        top: 22% !important;
+        top: 13% !important;
         left: 50% !important;
         width: 42% !important;
       }
       
       #btn-stuwork {
-        top: 30% !important;
+        top: 13% !important;
         left: 8% !important;
         width: 40% !important;
       }
       
       #btn-lessonplan {
-        top: 40% !important;
+        top: 30% !important;
         left: 48% !important;
         width: 45% !important;
       }
       
       #btn-video {
-        top: 50% !important;
-        left: 8% !important;
-        bottom: auto !important;
+        top: auto !important;
+        left: 46% !important;
+        bottom: 1% !important;
         width: 38% !important;
       }
       
       #btn-philosophy {
-        top: 60% !important;
-        left: 50% !important;
+        top: 50% !important;
+        left: 13% !important;
         width: 38% !important;
       }
       
       #rec-btn {
-        top: 68% !important;
-        left: 10% !important;
+        top: 31% !important;
+        left: 8% !important;
         width: 40% !important;
       }
       
       #btn-credentials {
-        top: 75% !important;
-        left: 55% !important;
+        top: 50% !important;
+        left: 50% !important;
         width: 40% !important;
       }
 
@@ -263,6 +263,24 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         height: 80% !important;
         top: 50% !important;
         left: 50% !important;
+      }
+
+      /* Mobile Resume View Overrides */
+      body.resume-view #person-graphic,
+      body.resume-view #resume-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+
+      #close-resume {
+        top: auto !important;
+        bottom: -60px !important;
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        font-size: 1.1rem !important;
+        padding: 12px 24px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
       }
     }
 
