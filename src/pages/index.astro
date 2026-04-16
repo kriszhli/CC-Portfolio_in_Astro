@@ -23,6 +23,7 @@ import Rec from '../assets/PNGs/Rec.png';
 import RecHover from '../assets/PNGs/Rec_Hover.png';
 import Cred from '../assets/PNGs/Cred.png';
 import CredHover from '../assets/PNGs/Cred_Hover.png';
+import ResumeDoc from '../assets/PNGs/Resume_doc.png';
 ---
 
 <!DOCTYPE html>
@@ -141,14 +142,8 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
-        <div style="padding: 40px; font-family: serif; color: #333; line-height: 1.6; height: 100%; box-sizing: border-box; background: #faf9f6; overflow-y: auto; overflow-x: hidden; border-radius: 6px;">
-          <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">Cici Qiao - Resume</h2>
-          <p><strong>Education:</strong><br/>▪ Degree program placeholder.<br/>▪ University placeholder text.</p>
-          <br/>
-          <p><strong>Experience:</strong><br/>▪ Teaching experience placeholder.<br/>▪ Curriculum development placeholder.<br/>▪ Classroom management placeholder.</p>
-          <br/>
-          <p><strong>Skills:</strong><br/>▪ Teaching, Pedagogy, Lesson Planning, Mentoring.</p>
-          <p style="text-align: center; color: #888; margin-top: 40px; font-style: italic;">(Scribble text placeholder — swap with real resume content later!)</p>
+        <div class="pdf-inner-content">
+          <Image src={ResumeDoc} alt="Cici Qiao Resume" loading="eager" style="width: 100%; height: auto; display: block;" />
         </div>
       </div>
 
@@ -261,18 +256,26 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         width: 40% !important;
       }
 
-      /* PDF Modal Mobile scale */
+      /* PDF Modal Mobile — letter-size aspect ratio, no padding, no scroll */
       #pdf-container {
-        width: 90% !important;
-        height: 80% !important;
-        top: 50% !important;
-        left: 50% !important;
-        /* Transform-origin points to the resume button's visual center */
-        /* Button: top:13%, left:50%, width:42% → center ≈ top:20%, left:71% */
-        /* Relative to the PDF element (centered at 50%/50% of viewport): */
-        /* x-offset from PDF center = (71% - 50%) of viewport = 21vw ≈ right */
-        /* y-offset from PDF center = (20% - 50%) of viewport = -30vh ≈ up */
-        transform-origin: calc(50% + 21vw) calc(50% - 30vh) !important;
+        width: 85% !important;
+        height: auto !important;
+        aspect-ratio: 8.5 / 11 !important;
+        /* Start position matches resume button center (top:13% left:71% = left:50% + width:42%/2) */
+        top: 13% !important;
+        left: 71% !important;
+        z-index: 50 !important;
+      }
+
+      .pdf-inner-content {
+        overflow: hidden !important;
+        padding: 0 !important;
+      }
+
+      .pdf-inner-content img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
       }
 
       /* Mobile Resume View Overrides */
@@ -280,15 +283,6 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         opacity: 0 !important;
         pointer-events: none !important;
         transform: scale(0.8) translateY(100px) !important;
-      }
-
-      body.resume-view #resume-btn {
-        opacity: 0 !important;
-        pointer-events: none !important;
-        top: 50% !important;
-        left: 50% !important;
-        width: 60% !important;
-        transform: translate(-50%, -50%) scale(1.5) !important;
       }
     }
 
@@ -311,7 +305,23 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       border-radius: 12px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       border: 6px solid #6d4c41; 
-      /* removed overflow-y so absolute buttons can float outside */
+    }
+
+    .pdf-inner-content {
+      height: 100%;
+      box-sizing: border-box;
+      background: #faf9f6;
+      overflow-y: auto;
+      overflow-x: hidden;
+      border-radius: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #999 transparent;
+    }
+
+    .pdf-inner-content img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
     
     #close-resume {
@@ -388,13 +398,11 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
     body.resume-view #pdf-container {
       visibility: visible !important;
       pointer-events: auto !important;
-      z-index: 30 !important;
     }
 
     body.transitioning-back #pdf-container {
       visibility: visible !important;
       pointer-events: none !important;
-      z-index: 9 !important;
     }
 
     @media (min-width: 769px) {
@@ -438,61 +446,64 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
     /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
-      /* Unify transition timings so the path stays straight (no weird curves) */
-      #resume-btn {
-        transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-      }
-
+      /* Resume button animates to center while fading out */
       body.resume-view #resume-btn {
         opacity: 0 !important;
         pointer-events: none !important;
         top: 50% !important;
         left: 50% !important;
-        width: 60% !important;
-        transform: translate(-50%, -50%) scale(2) !important;
+        width: 85% !important;
+        transform: translate(-50%, -50%) !important;
+        transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
       }
 
-      /* Mobile PDF uses transform-origin approach — no top/left animation */
+      /* PDF follows exact same path but fades IN */
       body.resume-view #pdf-container {
-        animation: mobilePdfOpen 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+        animation: mobilePdfOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+        z-index: 50 !important;
       }
       
       body.transitioning-back #pdf-container {
-        animation: mobilePdfClose 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+        animation: mobilePdfClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+        z-index: 50 !important;
+      }
+
+      /* Button reverses path when closing */
+      body.transitioning-back #resume-btn {
+        opacity: 1 !important;
+        transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
       }
     }
 
+    /* Mobile PDF open: same path as button (from button pos to center), opacity 0→1 */
     @keyframes mobilePdfOpen {
       0% {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
+        top: 13%;
+        left: 71%;
+        transform: translate(-50%, -50%) scale(0.15);
         opacity: 0;
-        z-index: 9;
       }
       100% {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
-        z-index: 30;
       }
     }
 
+    /* Mobile PDF close: reverse path (from center back to button pos), opacity 1→0 */
     @keyframes mobilePdfClose {
       0% {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
-        z-index: 30;
       }
       100% {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
+        top: 13%;
+        left: 71%;
+        transform: translate(-50%, -50%) scale(0.15);
         opacity: 0;
-        z-index: 9;
       }
     }
   </style>
