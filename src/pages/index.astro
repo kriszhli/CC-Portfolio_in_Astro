@@ -511,31 +511,18 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       const pdfContainer = document.getElementById('pdf-container');
       const isMobile = () => window.innerWidth <= 768;
 
-      // Animate button on mobile using Web Animations API (bypasses CSS !important)
-      let btnAnimation = null;
-      const animateBtnToCenter = () => {
-        if (!isMobile() || !resumeBtn) return;
-        btnAnimation = resumeBtn.animate([
-          { opacity: 1, transform: 'rotate(5deg)' },
-          { opacity: 0, transform: 'translate(-20%, 80%) scale(0.5) rotate(0deg)' }
-        ], { duration: 700, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
-      };
-      const animateBtnBack = () => {
-        if (!isMobile() || !resumeBtn) return;
-        if (btnAnimation) { btnAnimation.cancel(); btnAnimation = null; }
-        btnAnimation = resumeBtn.animate([
-          { opacity: 0, transform: 'translate(-20%, 80%) scale(0.5) rotate(0deg)' },
-          { opacity: 1, transform: 'rotate(5deg)' }
-        ], { duration: 700, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
-        btnAnimation.onfinish = () => { btnAnimation.cancel(); btnAnimation = null; };
-      };
-
       if(resumeBtn && closeResumeBtn && pdfContainer) {
         
         const closeResumeView = () => {
           document.body.classList.remove('resume-view');
           document.body.classList.add('transitioning-back');
-          animateBtnBack();
+          // On mobile: remove inline overrides so button transitions back
+          if (isMobile()) {
+            resumeBtn.style.removeProperty('opacity');
+            resumeBtn.style.removeProperty('transform');
+            // Clean up transition override after animation completes
+            setTimeout(() => resumeBtn.style.removeProperty('transition'), 750);
+          }
           setTimeout(() => document.body.classList.remove('transitioning-back'), 800);
         };
 
@@ -544,7 +531,14 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
           if (document.body.classList.contains('resume-view')) {
             closeResumeView();
           } else {
-            animateBtnToCenter();
+            // On mobile: set inline !important styles to fade + shift button
+            if (isMobile()) {
+              resumeBtn.style.setProperty('transition', 'opacity 0.7s cubic-bezier(0.2,0.8,0.2,1), transform 0.7s cubic-bezier(0.2,0.8,0.2,1)', 'important');
+              requestAnimationFrame(() => {
+                resumeBtn.style.setProperty('opacity', '0', 'important');
+                resumeBtn.style.setProperty('transform', 'translate(-20%, 80%) scale(0.5)', 'important');
+              });
+            }
             document.body.classList.add('resume-view');
           }
         });
