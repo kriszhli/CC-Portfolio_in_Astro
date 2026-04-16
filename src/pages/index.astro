@@ -146,7 +146,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
     </div>
   </div>
 
-  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.6s ease;"></div>
+  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 1; pointer-events: none; transition: opacity 0.8s ease-out;"></div>
 
   <style is:global>
     /* Custom cursor — only on devices that support hover (real mouse/trackpad) */
@@ -320,6 +320,14 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Fade in the layout on load (symmetrical with fade out)
+      const fadeOverlay = document.getElementById('white-fade-overlay');
+      if (fadeOverlay) {
+        setTimeout(() => {
+          fadeOverlay.style.opacity = '0';
+        }, 50);
+      }
+
       // PDF Modal Logic
       const resumeBtn = document.getElementById('resume-btn');
       const closeResumeBtn = document.getElementById('close-resume');

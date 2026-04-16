@@ -273,20 +273,35 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
 </head>
 <body>
   
-  <!-- Fade-in overlay -->
-  <div id="white-fade-in" style="position: fixed; inset: 0; background: white; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.8s ease-out;"></div>
+  <!-- Fade-in/out overlay -->
+  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.8s ease-out;"></div>
   
   <script>
-    // Fade out immediately after DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
-      const overlay = document.getElementById('white-fade-in');
+      const overlay = document.getElementById('white-fade-overlay');
+      
+      // 1. Fade in on load
       if (overlay) {
-        // Small delay to ensure render
         setTimeout(() => {
           overlay.style.opacity = '0';
-          // Remove from DOM after transition completes
-          setTimeout(() => overlay.remove(), 850);
         }, 50);
+      }
+
+      // 2. Fade out on back button
+      const backBtn = document.querySelector('.back-btn');
+      if (backBtn && overlay) {
+        backBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetHref = backBtn.getAttribute('href');
+          
+          document.body.style.pointerEvents = 'none';
+          overlay.style.transition = 'opacity 0.6s ease';
+          overlay.style.opacity = '1';
+          
+          setTimeout(() => {
+            window.location.href = targetHref;
+          }, 650);
+        });
       }
     });
   </script>
