@@ -422,6 +422,19 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         z-index: 9;
       }
     }
+
+    /* Force Mobile Animation Precedence */
+    @media (max-width: 768px) {
+      body.resume-view #resume-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: 60% !important;
+        transform: translate(-50%, -50%) scale(2) !important;
+        transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+      }
+    }
   </style>
 
   <script>
