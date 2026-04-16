@@ -462,13 +462,16 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
     }
 
 
-    /* PDF open: from button position to center, fading in */
+    /* PDF open: from button position to center, fading in — appears early */
     @keyframes mobilePdfOpen {
       0% {
         top: 25%;
         left: 71%;
-        transform: translate(-50%, -50%) scale(0.1);
+        transform: translate(-50%, -50%) scale(0.15);
         opacity: 0;
+      }
+      30% {
+        opacity: 0.7;
       }
       100% {
         top: 50%;
@@ -478,7 +481,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       }
     }
 
-    /* PDF close: from center back to button position, fading out */
+    /* PDF close: from center back to button position, fading out — fades late */
     @keyframes mobilePdfClose {
       0% {
         top: 50%;
@@ -486,10 +489,13 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
       }
+      70% {
+        opacity: 1;
+      }
       100% {
         top: 25%;
         left: 71%;
-        transform: translate(-50%, -50%) scale(0.1);
+        transform: translate(-50%, -50%) scale(0.15);
         opacity: 0;
       }
     }
