@@ -40,7 +40,15 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ── Theme variables (student = pink, professional = dark blue) ── */
     body {
+      --accent: #f4acb7;
+      --accent-deep: #e38ba0;
+      --accent-glow: rgba(244,172,183,0.25);
+      --accent-glass: rgba(244,172,183,0.15);
+      --accent-glass-border: rgba(244,172,183,0.35);
+      --accent-muted: #a48c8c;
+
       width: 100%;
       min-height: 100dvh;
       display: flex;
@@ -49,20 +57,31 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       overflow-x: hidden;
       padding: 100px 20px 60px;
       position: relative;
+      transition: --accent 0.5s, --accent-deep 0.5s;
     }
 
-    /* Subtle ambient background glow for glassmorphism */
+    body.theme-prof {
+      --accent: #3949ab;
+      --accent-deep: #1a237e;
+      --accent-glow: rgba(57,73,171,0.2);
+      --accent-glass: rgba(57,73,171,0.12);
+      --accent-glass-border: rgba(57,73,171,0.3);
+      --accent-muted: #7986a8;
+    }
+
+    /* Ambient background glow */
     body::before {
       content: '';
       position: fixed;
       top: -20%; left: -10%;
       width: 60vw; height: 60vw;
-      background: radial-gradient(circle, rgba(244,172,183,0.15) 0%, transparent 60%);
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
       z-index: -1;
       pointer-events: none;
+      transition: background 0.6s ease;
     }
 
-    /* ── Back button ─────────────────────────── */
+    /* ── Back button (icon only) ──────────────── */
     .back-btn {
       position: fixed;
       top: 24px;
@@ -70,25 +89,31 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       z-index: 100;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
       text-decoration: none;
-      color: #6d4c41;
-      font-size: 0.95rem;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 30px;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.4);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      color: var(--accent-deep);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.10),
+        0 1px 3px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.6);
       transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .back-btn:hover { 
-      transform: translateX(-4px); 
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    .back-btn:hover {
+      transform: translateX(-3px) scale(1.05);
+      background: rgba(255,255,255,0.95);
+      box-shadow:
+        0 8px 28px rgba(0,0,0,0.14),
+        0 2px 6px rgba(0,0,0,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.8);
     }
+    .back-btn:active { transform: scale(0.92); }
 
     /* ── Page layout ─────────────────────────── */
     .page-layout {
@@ -150,22 +175,37 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       width: 100%;
       height: 100%;
       object-fit: contain;
-      border-radius: 8px; /* Slightly softer corners */
-      background: white; /* Prevent transparent stacking issues */
-      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.12));
+      border-radius: 8px;
+      background: white;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.28));
       transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
                   opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
                   filter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
       will-change: transform, opacity, filter;
-      border: 1px solid rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
     }
 
-    /* Stack position classes */
-    .pos-0 { z-index:10; transform: rotate(0deg)   translate(0, 0)      scale(1);    opacity:1;    pointer-events:auto; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15)); }
-    .pos-1 { z-index:9;  transform: rotate(2.5deg) translate(2%, 2%)  scale(0.96); opacity:0.85; pointer-events:none; }
-    .pos-2 { z-index:8;  transform: rotate(-2deg)  translate(-1.5%, 3.5%) scale(0.92); opacity:0.65; pointer-events:none; }
-    .pos-3 { z-index:7;  transform: rotate(1deg)   translate(1%, 5%)  scale(0.88); opacity:0.45; pointer-events:none; }
-    .pos-hidden { z-index:0; transform: translateY(20px) scale(0.8); opacity:0; pointer-events:none; }
+    /* Active card on top */
+    .fan-active {
+      z-index: 10;
+      transform: rotate(0deg) translate(0, 0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.35));
+    }
+
+    /* Pages BEFORE current: peek out from the LEFT */
+    .fan-left-1 { z-index:9;  transform: rotate(-4deg)   translate(-6%, 1%)   scale(0.97); opacity:0.85; pointer-events:none; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25)); }
+    .fan-left-2 { z-index:8;  transform: rotate(-7.5deg) translate(-11%, 2%)  scale(0.93); opacity:0.65; pointer-events:none; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.22)); }
+    .fan-left-3 { z-index:7;  transform: rotate(-11deg)  translate(-16%, 3%)  scale(0.89); opacity:0.45; pointer-events:none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18)); }
+
+    /* Pages AFTER current: peek out from the RIGHT */
+    .fan-right-1 { z-index:9;  transform: rotate(4deg)   translate(6%, 1%)   scale(0.97); opacity:0.85; pointer-events:none; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25)); }
+    .fan-right-2 { z-index:8;  transform: rotate(7.5deg) translate(11%, 2%)  scale(0.93); opacity:0.65; pointer-events:none; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.22)); }
+    .fan-right-3 { z-index:7;  transform: rotate(11deg)  translate(16%, 3%)  scale(0.89); opacity:0.45; pointer-events:none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18)); }
+
+    /* Too far away — hidden */
+    .fan-hidden { z-index:0; transform: translateY(20px) scale(0.85); opacity:0; pointer-events:none; }
 
     /* ── Arrow controls ──────────────────────── */
     .controls {
@@ -173,23 +213,28 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       justify-content: space-between;
       width: min(80vw, 320px);
       align-items: center;
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 10px 24px;
       border-radius: 40px;
-      border: 1px solid rgba(255,255,255,0.8);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow:
+        0 8px 28px rgba(0,0,0,0.10),
+        0 2px 6px rgba(0,0,0,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 0.3s ease;
     }
 
     .counter {
       font-size: 1.15rem;
       font-weight: 700;
-      color: #6d4c41;
+      color: var(--accent-deep);
       font-variant-numeric: tabular-nums;
       min-width: 4ch;
       text-align: center;
       letter-spacing: 0.5px;
+      transition: color 0.4s ease;
     }
 
     .arrow {
@@ -199,75 +244,122 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       padding: 8px;
       display: flex;
       align-items: center;
-      color: #f4acb7;
+      color: var(--accent);
       transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .arrow:hover { 
-      transform: scale(1.15); 
-      color: #e38ba0;
+    .arrow:hover {
+      transform: scale(1.15);
+      color: var(--accent-deep);
     }
-    .arrow:active { transform: scale(0.95); }
+    .arrow:active { transform: scale(0.92); }
     .arrow svg  { width: 28px; height: 28px; }
 
-    /* ── Toggle (Glassmorphism inspired) ──────── */
+    /* ── Vertical toggle (thick slider) ────────── */
     .toggle-wrap {
       position: relative;
-      height: 60px;
-      width: 280px;
-      background: rgba(244, 172, 183, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(244, 172, 183, 0.3);
-      border-radius: 30px;
+      width: 160px;
+      height: 130px;
+      background: var(--accent-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--accent-glass-border);
+      border-radius: 32px;
       cursor: pointer;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      box-shadow: inset 0 2px 4px rgba(244,172,183,0.1), 0 4px 12px rgba(244,172,183,0.1);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.10),
+        0 2px 6px rgba(0,0,0,0.06),
+        inset 0 2px 4px rgba(255,255,255,0.3),
+        inset 0 -1px 2px rgba(0,0,0,0.04);
       user-select: none;
       overflow: hidden;
+      transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+    .toggle-wrap:hover {
+      box-shadow:
+        0 10px 32px rgba(0,0,0,0.14),
+        0 3px 8px rgba(0,0,0,0.08),
+        inset 0 2px 4px rgba(255,255,255,0.3);
     }
 
     .toggle-knob {
       position: absolute;
-      top: 6px;
       left: 6px;
-      width: 134px;
-      height: 46px;
+      right: 6px;
+      width: auto;
+      height: 55px;
       background: #fff;
-      border-radius: 23px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 26px;
+      box-shadow:
+        0 4px 14px rgba(0,0,0,0.12),
+        0 1px 3px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.9);
       transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
       z-index: 1;
     }
 
     .toggle-lbl {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
       pointer-events: none;
       z-index: 2;
       transition: color 0.4s ease;
+      width: 100%;
     }
 
-    /* Student active (knob on right) */
-    .toggle-wrap.stu .toggle-knob          { transform: translateX(134px); }
-    .toggle-wrap.stu .toggle-lbl.lbl-prof  { color: #a48c8c; }
-    .toggle-wrap.stu .toggle-lbl.lbl-stu   { color: #f4acb7; }
+    /* Professional active → knob at top */
+    .toggle-wrap.prof .toggle-knob         { transform: translateY(6px); }
+    .toggle-wrap.prof .toggle-lbl.lbl-prof { color: var(--accent-deep); }
+    .toggle-wrap.prof .toggle-lbl.lbl-stu  { color: var(--accent-muted); }
 
-    /* Professional active (knob on left) */
-    .toggle-wrap.prof .toggle-knob         { transform: translateX(0); }
-    .toggle-wrap.prof .toggle-lbl.lbl-prof { color: #f4acb7; }
-    .toggle-wrap.prof .toggle-lbl.lbl-stu  { color: #a48c8c; }
+    /* Student active → knob at bottom */
+    .toggle-wrap.stu .toggle-knob          { transform: translateY(calc(130px - 55px - 6px)); }
+    .toggle-wrap.stu .toggle-lbl.lbl-prof  { color: var(--accent-muted); }
+    .toggle-wrap.stu .toggle-lbl.lbl-stu   { color: var(--accent-deep); }
 
-    /* Responsive adjustments for really small screens */
+    /* Responsive: mobile toggle goes horizontal, page tighter */
+    @media (max-width: 1023px) {
+      body { padding: 60px 16px 30px; }
+      .page-layout { gap: 20px; }
+      .center-col { gap: 18px; }
+      .back-btn { top: 14px; left: 14px; width: 42px; height: 42px; }
+
+      /* Flip toggle to horizontal */
+      .toggle-wrap {
+        width: 260px;
+        height: 56px;
+        flex-direction: row;
+        border-radius: 28px;
+      }
+      .toggle-knob {
+        top: 5px;
+        bottom: 5px;
+        left: 5px;
+        right: auto;
+        width: 125px;
+        height: auto;
+        border-radius: 24px;
+      }
+      /* Professional active → knob on left */
+      .toggle-wrap.prof .toggle-knob { transform: translateX(0) translateY(0); }
+      /* Student active → knob on right */
+      .toggle-wrap.stu .toggle-knob  { transform: translateX(125px) translateY(0); }
+    }
+
     @media (max-width: 380px) {
-      .toggle-wrap { width: 260px; height: 56px; }
-      .toggle-knob { width: 124px; height: 44px; }
-      .toggle-wrap.stu .toggle-knob { transform: translateX(124px); }
-      .controls { gap: 40px; padding: 10px 16px; }
-      .back-btn { top: 16px; left: 16px; padding: 8px 16px; font-size: 0.85rem; }
+      .toggle-wrap { width: 240px; height: 52px; }
+      .toggle-knob { width: 115px; }
+      .toggle-wrap.stu .toggle-knob { transform: translateX(115px) translateY(0); }
+      .controls { padding: 8px 16px; }
     }
 
   </style>
@@ -307,11 +399,10 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
     });
   </script>
 
-  <a href="/CC-Portfolio_in_Astro/" class="back-btn">
+  <a href="/CC-Portfolio_in_Astro/" class="back-btn" aria-label="Back to home">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M19 12H5M12 19l-7-7 7-7"/>
     </svg>
-    Back
   </a>
 
   <div class="page-layout">
@@ -365,14 +456,24 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       const prevBtn   = document.getElementById('prev-btn');
       const nextBtn   = document.getElementById('next-btn');
 
-      // ── Stack rendering ────────────────────────────────────────────────
-      const POS = ['pos-0','pos-1','pos-2','pos-3','pos-hidden'];
+      // ── Stack rendering (linear fan) ────────────────────────────────────
+      const ALL_FAN = ['fan-active','fan-left-1','fan-left-2','fan-left-3','fan-right-1','fan-right-2','fan-right-3','fan-hidden'];
 
       function render() {
         imgEls.forEach((el, i) => {
-          POS.forEach(c => el.classList.remove(c));
-          const rel = (i - idx + images.length) % images.length;
-          el.classList.add(rel <= 3 ? `pos-${rel}` : 'pos-hidden');
+          ALL_FAN.forEach(c => el.classList.remove(c));
+
+          if (i === idx) {
+            el.classList.add('fan-active');
+          } else if (i < idx) {
+            // Pages before current → fan left
+            const dist = idx - i; // 1, 2, 3, …
+            el.classList.add(dist <= 3 ? `fan-left-${dist}` : 'fan-hidden');
+          } else {
+            // Pages after current → fan right
+            const dist = i - idx; // 1, 2, 3, …
+            el.classList.add(dist <= 3 ? `fan-right-${dist}` : 'fan-hidden');
+          }
         });
         counterEl.textContent = `${numMap[idx]}/${total}`;
       }
@@ -394,19 +495,21 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
 
       buildStack();
 
-      prevBtn.addEventListener('click', () => { idx = (idx - 1 + images.length) % images.length; render(); });
-      nextBtn.addEventListener('click', () => { idx = (idx + 1) % images.length; render(); });
+      prevBtn.addEventListener('click', () => { if (idx > 0) { idx--; render(); } });
+      nextBtn.addEventListener('click', () => { if (idx < images.length - 1) { idx++; render(); } });
 
-      // ── Toggle ─────────────────────────────────────────────────────────
+      // ── Toggle (also switches body theme class for color vars) ────────
       toggleEl.addEventListener('click', () => {
         if (mode === 'student') {
           mode = 'professional';
           images = profSrcs; numMap = profMap; total = profTotal;
           toggleEl.classList.replace('stu', 'prof');
+          document.body.classList.add('theme-prof');
         } else {
           mode = 'student';
           images = stuSrcs; numMap = stuMap; total = stuTotal;
           toggleEl.classList.replace('prof', 'stu');
+          document.body.classList.remove('theme-prof');
         }
         buildStack();
       });
