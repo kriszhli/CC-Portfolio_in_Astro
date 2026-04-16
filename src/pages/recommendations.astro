@@ -22,6 +22,9 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
   <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}/favicon.png`} />
   <title>Recommendations | Ms. Cici Qiao</title>
   <meta name="description" content="Letters of Recommendation for Ms. Cici Qiao" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!--
     ALL styles live here in <head> as a raw <style> tag (no Astro scoping).
@@ -30,7 +33,6 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       • the mag-overlay (position:fixed) works without overflow clipping
   -->
   <style is:global>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -388,12 +390,12 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
           const targetHref = backBtn.getAttribute('href');
           
           document.body.style.pointerEvents = 'none';
-          overlay.style.transition = 'opacity 0.6s ease';
+          overlay.style.transition = 'opacity 0.2s ease';
           overlay.style.opacity = '1';
           
           setTimeout(() => {
             window.location.href = targetHref;
-          }, 650);
+          }, 150);
         });
       }
     });

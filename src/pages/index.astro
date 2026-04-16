@@ -146,7 +146,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
     </div>
   </div>
 
-  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 1; pointer-events: none; transition: opacity 0.8s ease-out;"></div>
+  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 1; pointer-events: none; transition: opacity 0.2s ease-out;"></div>
 
   <style is:global>
 
@@ -543,7 +543,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
           const targetHref = recBtn.getAttribute('href');
           document.body.style.pointerEvents = 'none';
           fadeOverlay.style.opacity = '1';
-          setTimeout(() => { window.location.href = targetHref; }, 650);
+          setTimeout(() => { window.location.href = targetHref; }, 150);
         });
       }
     });
