@@ -425,6 +425,11 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
     /* Force Mobile Animation Precedence */
     @media (max-width: 768px) {
+      /* Unify transition timings so the path stays straight (no weird curves) */
+      #resume-btn {
+        transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+      }
+
       body.resume-view #resume-btn {
         opacity: 0 !important;
         pointer-events: none !important;
@@ -432,7 +437,45 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         left: 50% !important;
         width: 60% !important;
         transform: translate(-50%, -50%) scale(2) !important;
-        transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+      }
+
+      /* Zoom PDF from the mobile button location (top: 13%, left: 50%) */
+      body.resume-view #pdf-container {
+        animation: mobilePdfOpen 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+      }
+      
+      body.transitioning-back #pdf-container {
+        animation: mobilePdfClose 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+      }
+    }
+
+    @keyframes mobilePdfOpen {
+      0% {
+        top: 13%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.05) rotate(0deg);
+        z-index: 9;
+      }
+      100% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        z-index: 30;
+      }
+    }
+
+    @keyframes mobilePdfClose {
+      0% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        z-index: 30;
+      }
+      100% {
+        top: 13%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.05) rotate(0deg);
+        z-index: 9;
       }
     }
   </style>
