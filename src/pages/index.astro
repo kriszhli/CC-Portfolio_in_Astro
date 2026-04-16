@@ -380,17 +380,24 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
     }
 
     body.resume-view #pdf-container {
-      animation: slideOutAndZoom 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
       visibility: visible !important;
       pointer-events: auto !important;
       z-index: 30 !important;
     }
 
     body.transitioning-back #pdf-container {
-      animation: zoomAndSlideIn 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
       visibility: visible !important;
       pointer-events: none !important;
       z-index: 9 !important;
+    }
+
+    @media (min-width: 769px) {
+      body.resume-view #pdf-container {
+        animation: slideOutAndZoom 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+      }
+      body.transitioning-back #pdf-container {
+        animation: zoomAndSlideIn 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
+      }
     }
 
     @keyframes slideOutAndZoom {
