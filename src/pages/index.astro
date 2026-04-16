@@ -43,6 +43,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       <Image id="person-graphic" src={PersonImg} alt="Ms. Cici Qiao Sitting" loading="eager" fetchpriority="high" class="diorama-element transition-anim" style="bottom: -2%; left: 30%; width: 40%; height: auto; z-index: 3; pointer-events: none; filter: brightness(1.05) saturate(1.0) contrast(1.0) opacity(0.98);" />
 
       <InteractiveElement 
+        id="stu-work-btn"
         href="/student-work" 
         group="group-1"
         top="30%" 
@@ -70,6 +71,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       />
       
       <InteractiveElement 
+        id="lesson-plan-btn"
         href="/lesson-plan" 
         group="group-1"
         top="20%" 
@@ -83,6 +85,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       />
       
       <InteractiveElement 
+        id="vid-btn"
         href="/video" 
         bottom="-2%" 
         left="50%" 
@@ -94,6 +97,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       />
 
       <InteractiveElement 
+        id="teaching-philosophy-btn"
         href="/teaching-philosophy" 
         group="group-2"
         top="58%" 
@@ -118,6 +122,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       />
 
       <InteractiveElement 
+        id="cred-btn"
         href="/credentials" 
         group="group-1"
         top="58%" 
@@ -149,6 +154,42 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
   <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 1; pointer-events: none; transition: opacity 0.8s ease-out;"></div>
 
   <style is:global>
+    /* ── Mobile Layout (Vertical) ───────────────── */
+    @media (max-width: 768px) {
+      .diorama-wrapper {
+        aspect-ratio: 3 / 5 !important;
+        margin-top: 2vh;
+      }
+      
+      #title-graphic {
+        top: 3% !important; 
+        left: 10% !important; 
+        width: 80% !important; 
+      }
+      #person-graphic {
+        bottom: 0% !important; 
+        left: 10% !important; 
+        width: 80% !important; 
+      }
+
+      /* Scatter buttons zigzag above/around the person */
+      #stu-work-btn            { top: 16% !important; left: 55% !important; width: 33% !important; }
+      #lesson-plan-btn         { top: 25% !important; left: 10% !important; width: 35% !important; }
+      #rec-btn                 { top: 36% !important; left: 55% !important; width: 33% !important; }
+      #resume-btn              { top: 48% !important; left: 12% !important; width: 33% !important; }
+      #teaching-philosophy-btn { top: 60% !important; left: 58% !important; width: 30% !important; }
+      #cred-btn                { top: 72% !important; left: 10% !important; width: 33% !important; }
+      #vid-btn                 { bottom: 5% !important; left: 62% !important; width: 28% !important; top: auto !important; }
+      
+      /* Scale the PDF modal to fit mobile */
+      #pdf-container {
+        width: 85% !important;
+        height: 70% !important;
+        top: 50% !important;
+        left: 50% !important;
+      }
+    }
+
     /* Custom cursor — only on devices that support hover (real mouse/trackpad) */
     @media (hover: hover) and (pointer: fine) {
       * {
