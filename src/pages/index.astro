@@ -179,88 +179,6 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       #custom-cursor { display: none; }
     }
 
-    /* ─── Portrait (Mobile) Layout ─────────────────────────────────── */
-    @media (orientation: portrait) {
-      .diorama {
-        max-width: none !important;
-        max-height: none !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        background-size: cover !important;
-        background-position: center bottom !important;
-        box-shadow: inset 0 0 80px 30px #f7eed7 !important;
-      }
-
-      #title-graphic {
-        top: 6% !important;
-        left: 10% !important;
-        width: 80% !important;
-      }
-
-      #person-graphic {
-        top: auto !important;
-        bottom: 3% !important;
-        left: 13% !important;
-        width: 80% !important;
-        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      #resume-btn      { top: 13% !important; left: 50% !important; width: 42% !important; }
-      #btn-stuwork     { top: 13% !important; left:  8% !important; width: 40% !important; }
-      #btn-lessonplan  { top: 28% !important; left: 48% !important; width: 45% !important; }
-      #btn-video       { top: auto !important; left: 48% !important; bottom: 4% !important; width: 38% !important; }
-      #btn-philosophy  { top: 48% !important; left: 13% !important; width: 38% !important; }
-      #rec-btn         { top: 29% !important; left:  8% !important; width: 40% !important; }
-      #btn-credentials { top: 45% !important; left: 50% !important; width: 40% !important; }
-
-      /* PDF viewer — letter-size aspect ratio, no scroll.
-         Pre-positioned at animation start state to prevent rendering flash on real devices.
-         Animated props intentionally lack !important so @keyframes can override them. */
-      #pdf-container {
-        width: 85% !important;
-        height: auto !important;
-        aspect-ratio: 8.5 / 11 !important;
-        z-index: 50 !important;
-        top: 25%;
-        left: 71%;
-        transform: translate(-50%, -50%) scale(0.15);
-        opacity: 0;
-        transition: none !important;
-      }
-
-      .pdf-inner-content {
-        overflow: hidden !important;
-        padding: 0 !important;
-      }
-
-      .pdf-inner-content img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-      }
-
-      body.resume-view #person-graphic {
-        opacity: 0 !important;
-        pointer-events: none !important;
-        transform: scale(0.5) translateY(200px) !important;
-        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      #resume-btn .hover-img { display: none !important; }
-
-      body.resume-view #resume-btn { pointer-events: none !important; }
-
-      body.resume-view #pdf-container {
-        animation: mobilePdfOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-        z-index: 50 !important;
-      }
-
-      body.transitioning-back #pdf-container {
-        animation: mobilePdfClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-        z-index: 50 !important;
-      }
-    }
-
     /* ─── Shared Styles ─────────────────────────────────────────────── */
     .transition-anim {
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -363,6 +281,88 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       opacity: 0 !important;
       transform: scale(0.5) !important;
       transition: opacity 0.15s ease, transform 0.15s ease !important;
+    }
+
+    /* ─── Portrait (Mobile) Layout ─────────────────────────────────── */
+    @media (orientation: portrait) {
+      .diorama {
+        max-width: none !important;
+        max-height: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-size: cover !important;
+        background-position: center bottom !important;
+        box-shadow: inset 0 0 80px 30px #f7eed7 !important;
+      }
+
+      #title-graphic {
+        top: 6% !important;
+        left: 10% !important;
+        width: 80% !important;
+      }
+
+      #person-graphic {
+        top: auto !important;
+        bottom: 3% !important;
+        left: 13% !important;
+        width: 80% !important;
+        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      #resume-btn      { top: 13% !important; left: 50% !important; width: 42% !important; }
+      #btn-stuwork     { top: 13% !important; left:  8% !important; width: 40% !important; }
+      #btn-lessonplan  { top: 28% !important; left: 48% !important; width: 45% !important; }
+      #btn-video       { top: auto !important; left: 48% !important; bottom: 4% !important; width: 38% !important; }
+      #btn-philosophy  { top: 48% !important; left: 13% !important; width: 38% !important; }
+      #rec-btn         { top: 29% !important; left:  8% !important; width: 40% !important; }
+      #btn-credentials { top: 45% !important; left: 50% !important; width: 40% !important; }
+
+      /* PDF viewer — letter-size aspect ratio, no scroll.
+         Pre-positioned at animation start state to prevent rendering flash on real devices.
+         Animated props intentionally lack !important so @keyframes can override them. */
+      #pdf-container {
+        width: min(88vw, calc((88vh - 40px) * 8.5 / 11)) !important;
+        height: auto !important;
+        aspect-ratio: 8.5 / 11 !important;
+        z-index: 50 !important;
+        top: 25%;
+        left: 71%;
+        transform: translate(-50%, -50%) scale(0.15);
+        opacity: 0;
+        transition: none !important;
+      }
+
+      .pdf-inner-content {
+        overflow: hidden !important;
+        padding: 0 !important;
+      }
+
+      .pdf-inner-content img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+      }
+
+      body.resume-view #person-graphic {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: scale(0.5) translateY(200px) !important;
+        transition: transform 0.3s ease-out, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      #resume-btn .hover-img { display: none !important; }
+
+      body.resume-view #resume-btn { pointer-events: none !important; }
+
+      body.resume-view #pdf-container {
+        animation: mobilePdfOpen 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+        z-index: 50 !important;
+      }
+
+      body.transitioning-back #pdf-container {
+        animation: mobilePdfClose 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+        z-index: 50 !important;
+      }
     }
 
     /* ─── Landscape (Desktop) Resume View ───────────────────────────── */
