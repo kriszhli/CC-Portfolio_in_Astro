@@ -20,7 +20,6 @@ import RecHover from '../assets/PNGs/Rec_Hover.png';
 import Cred from '../assets/PNGs/Cred.png';
 import CredHover from '../assets/PNGs/Cred_Hover.png';
 import ResumeDoc from '../assets/PNGs/Resume_doc.png';
-import CursorImg from '../assets/PNGs/cursor.png';
 ---
 
 <!DOCTYPE html>
@@ -33,7 +32,6 @@ import CursorImg from '../assets/PNGs/cursor.png';
   <meta name="description" content="Ms. Cici Qiao Portfolio Landing Page" />
 </head>
 <body>
-  <Image id="custom-cursor" src={CursorImg} alt="cursor" loading="eager" />
   <div class="diorama-wrapper">
     <div class="diorama">
 
@@ -151,38 +149,6 @@ import CursorImg from '../assets/PNGs/cursor.png';
   <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; opacity: 1; pointer-events: none; transition: opacity 0.8s ease-out;"></div>
 
   <style is:global>
-    @media (hover: hover) and (pointer: fine) {
-      * { cursor: none !important; }
-
-      #custom-cursor {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 38px;
-        height: auto;
-        pointer-events: none;
-        z-index: 99999;
-        /* Same shadow as InteractiveElement buttons */
-        filter:
-          drop-shadow(3px 2px 1px rgba(0, 0, 0, 0.8))
-          drop-shadow(10px 7px 4px rgba(0, 0, 0, 0.55))
-          drop-shadow(20px 16px 6px rgba(0, 0, 0, 0.15));
-        transition: transform 0.05s linear, width 0.2s, filter 0.2s;
-      }
-
-      body.hovering-link #custom-cursor {
-        width: 44px;
-        filter:
-          brightness(1.15)
-          drop-shadow(3px 2px 1px rgba(0, 0, 0, 0.8))
-          drop-shadow(10px 7px 4px rgba(0, 0, 0, 0.55))
-          drop-shadow(20px 16px 6px rgba(0, 0, 0, 0.15));
-      }
-    }
-
-    @media (hover: none), (pointer: coarse) {
-      #custom-cursor { display: none; }
-    }
 
     /* ─── Shared Styles ─────────────────────────────────────────────── */
     .transition-anim {
@@ -473,7 +439,6 @@ import CursorImg from '../assets/PNGs/cursor.png';
         navigator.maxTouchPoints > 0;
 
       if (!isTouchDevice) {
-        const customCursor = document.getElementById('custom-cursor');
         let mouseX = 0, mouseY = 0;
         let rafPending = false;
 
@@ -522,10 +487,6 @@ import CursorImg from '../assets/PNGs/cursor.png';
         };
 
         document.addEventListener('mousemove', (e) => {
-          if (customCursor) {
-            // Set offset to 0 so the pointer aligns with the top-left tip of the cursor PNG
-            customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-          }
           mouseX = e.clientX;
           mouseY = e.clientY;
           if (!rafPending) {
