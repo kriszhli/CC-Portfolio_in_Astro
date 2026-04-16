@@ -267,6 +267,12 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         height: 80% !important;
         top: 50% !important;
         left: 50% !important;
+        /* Transform-origin points to the resume button's visual center */
+        /* Button: top:13%, left:50%, width:42% → center ≈ top:20%, left:71% */
+        /* Relative to the PDF element (centered at 50%/50% of viewport): */
+        /* x-offset from PDF center = (71% - 50%) of viewport = 21vw ≈ right */
+        /* y-offset from PDF center = (20% - 50%) of viewport = -30vh ≈ up */
+        transform-origin: calc(50% + 21vw) calc(50% - 30vh) !important;
       }
 
       /* Mobile Resume View Overrides */
@@ -446,7 +452,7 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
         transform: translate(-50%, -50%) scale(2) !important;
       }
 
-      /* Zoom PDF from the mobile button location (top: 13%, left: 50%) */
+      /* Mobile PDF uses transform-origin approach — no top/left animation */
       body.resume-view #pdf-container {
         animation: mobilePdfOpen 0.8s cubic-bezier(0.3, 0.1, 0.2, 1) forwards !important;
       }
@@ -458,15 +464,17 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
 
     @keyframes mobilePdfOpen {
       0% {
-        top: 25%;
-        left: 71%;
-        transform: translate(-50%, -50%) scale(0.05) rotate(0deg);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
         z-index: 9;
       }
       100% {
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
         z-index: 30;
       }
     }
@@ -475,13 +483,15 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       0% {
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
         z-index: 30;
       }
       100% {
-        top: 25%;
-        left: 71%;
-        transform: translate(-50%, -50%) scale(0.05) rotate(0deg);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
         z-index: 9;
       }
     }
