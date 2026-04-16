@@ -270,11 +270,19 @@ import CredHover from '../assets/PNGs/Cred_Hover.png';
       }
 
       /* Mobile Resume View Overrides */
-      body.resume-view #person-graphic,
-      body.resume-view #resume-btn {
+      body.resume-view #person-graphic {
         opacity: 0 !important;
         pointer-events: none !important;
         transform: scale(0.8) translateY(100px) !important;
+      }
+
+      body.resume-view #resume-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: 60% !important;
+        transform: translate(-50%, -50%) scale(1.5) !important;
       }
     }
 
