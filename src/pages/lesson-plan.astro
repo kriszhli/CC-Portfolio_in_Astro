@@ -16,7 +16,6 @@ import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
   <title>Lesson Plan - Ms. Cici Qiao</title>
 </head>
 <body>
-  <div id="custom-cursor"></div>
   <div class="diorama-wrapper">
     <!-- Reusing the diorama layout engine from the homepage -->
     <div class="diorama" style={`background-image: url('${LessonPlanPageBg.src}'); background-size: cover; background-position: center;`}>
@@ -33,41 +32,6 @@ import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
   </div>
 
   <style is:global>
-    /* Custom cursor — only on devices that support hover (real mouse/trackpad) */
-    @media (hover: hover) and (pointer: fine) {
-      * {
-        cursor: none !important;
-      }
-
-      #custom-cursor {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 20px;
-        height: 20px;
-        background-color: rgba(255, 255, 255, 0.84);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 99999;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transition: width 0.2s, height 0.2s, background-color 0.2s;
-      }
-
-      body.hovering-link #custom-cursor {
-        width: 20px;
-        height: 20px;
-        background-color: transparent;
-        border: 3px solid white;
-      }
-    }
-
-    /* Hide cursor element entirely on touch/mobile */
-    @media (hover: none), (pointer: coarse) {
-      #custom-cursor {
-        display: none;
-      }
-    }
-
     .back-button {
       position: absolute;
       top: 5%;
@@ -102,14 +66,7 @@ import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
         navigator.maxTouchPoints > 0;
 
       if (!isTouchDevice) {
-        const customCursor = document.getElementById('custom-cursor');
         const interactiveElements = document.querySelectorAll('.interactive-element');
-
-        document.addEventListener('mousemove', (e) => {
-          if (customCursor) {
-            customCursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
-          }
-        });
 
         interactiveElements.forEach(el => {
           el.addEventListener('mouseenter', () => {
