@@ -26,9 +26,12 @@ src/
 ├── pages/
 │   ├── index.astro            # Landing page — layout, CSS, and interaction logic
 │   ├── recommendations.astro  # 3D carousel + magnifier for recommendation letters
-│   └── lesson-plan.astro      # Lesson plan viewer page
-└── styles/
-    └── global.css     # Base reset and diorama canvas geometry
+│   └── lesson-plan.astro      # Interactive binder UI with PDF.js-powered lesson viewer
+public/
+└── assets/
+    └── PDFs/          # Lesson plan PDFs (SmartCookie, Math, SocialStudies) — served with stable URLs
+src/styles/
+└── global.css         # Base reset and diorama canvas geometry
 ```
 
 ---
@@ -51,12 +54,15 @@ GitHub Pages is configured to deploy from the Actions source in the repository s
 
 ## Changelog
 
-### Mobile Resume Viewer (04/15/2026)
+### Mobile Resume Viewer & Recommendations Page (04/15/2026)
 
-- **Resume viewer content** — replaced placeholder with `Resume_doc.png`; desktop keeps scrollable fixed-width viewer, mobile uses letter-size aspect ratio (`8.5:11`) with no padding/scroll.
-- **Morph animation** — on portrait devices the resume button (via `style.setProperty`) and PDF container (via `@keyframes mobilePdfOpen/Close`) share the same trajectory and cross-fade, creating a "button morphs into document" effect.
-- **Orientation-based layout** — switched mobile breakpoint from `max-width: 768px` to `orientation: portrait` so any device held vertically (including iPads) gets the mobile layout.
-- **Z-index layering** — PDF viewer is `z-index: 50` on mobile (above button) and `z-index: 9` on desktop (behind button).
-- **Blink fix** — PDF container pre-positioned at animation start state in CSS (without `!important`) and `transition: none !important` applied to prevent `.transition-anim` from racing the keyframe on real devices.
-- **Person graphic** — fade curve synced with other interactive buttons (`transform 0.3s ease-out, opacity 0.8s cubic-bezier`); desktop repositioning isolated to `orientation: landscape`.
-- **Recommendations page** — added 3D-stacked image carousel, professional/student toggle, and magnifier panel.
+- **Mobile resume viewer** — portrait devices get a morph animation where the resume button transitions into a letter-size (8.5:11) document; orientation-based breakpoint ensures iPads are covered.
+- **Resume rendering fixes** — z-index layering, blink prevention, and person graphic sync resolved cross-device glitches on the desktop/mobile split layout.
+- **Recommendations page** — 3D-stacked image carousel with a professional/student toggle and a magnifier panel for viewing recommendation letters.
+
+### Lesson Plan Binder (04/16/2026)
+
+- **Binder UI** — lesson-plan page styled as an interactive physical binder (spine, ring holes, and side tabs) to reinforce a school-supply theme.
+- **Glass & lighting** — unified glassmorphism system across spine and tabs; reactive light blooms and spine tint shift color (pink → green → blue) based on the active lesson.
+- **PDF.js pipeline** — custom canvas renderer replaces `<iframe>` embeds; pages scale to fit width at `devicePixelRatio` resolution with lazy loading per tab and debounced resize re-rendering.
+- **Animations** — 3D `rotateY` page-turn on tab switch; smooth tab slide, color, and bloom transitions throughout.
