@@ -1,10 +1,10 @@
 ---
 import '../styles/global.css';
-import { Image } from 'astro:assets';
 
-// Asset Imports
-import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
-
+// Simple paths to PDFs - we handle logic via PDF.js now
+const SmartCookiePath = `${import.meta.env.BASE_URL}/assets/PDFs/SmartCookie.pdf`;
+const MathPath = `${import.meta.env.BASE_URL}/assets/PDFs/Math.pdf`;
+const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies.pdf`;
 ---
 
 <!DOCTYPE html>
@@ -13,70 +13,471 @@ import LessonPlanPageBg from '../assets/PNGs/LessonPlanPage_Background.png';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}/favicon.png`} />
-  <title>Lesson Plan - Ms. Cici Qiao</title>
+  <title>Lesson Plan - Ms. Qiao</title>
+  <!-- Load PDF.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
-  <div class="diorama-wrapper">
-    <!-- Reusing the diorama layout engine from the homepage -->
-    <div class="diorama" style={`background-image: url('${LessonPlanPageBg.src}'); background-size: cover; background-position: center;`}>
+  
+  <!-- Back Button (Glassy circular button) -->
+  <a href={import.meta.env.BASE_URL} class="back-button interactive-element" aria-label="Back to Desk">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+    </svg>
+  </a>
+
+  <main class="binder-wrapper">
+    <div class="binder-main">
+      <div class="spine">
+        <div class="hole"></div>
+        <div class="hole"></div>
+        <div class="hole"></div>
+      </div>
       
-      <!-- Back Button -->
-      <!-- Added a simple absolute positioned button to return home -->
-      <a href={import.meta.env.BASE_URL} class="back-button interactive-element">
-        <span>← Back to Desk</span>
-      </a>
-
-      <!-- Content goes here -->
-
+      <div class="content-area">
+        <div class="page active" id="page-1" role="tabpanel" aria-labelledby="tab-1">
+          <div class="pdf-viewer" data-url={SmartCookiePath}>
+            <div class="pdf-loading">Loading Lesson Plan...</div>
+            <div class="pdf-render-container"></div>
+          </div>
+        </div>
+        <div class="page" id="page-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+          <div class="pdf-viewer" data-url={MathPath}>
+            <div class="pdf-loading">Loading TPA Math...</div>
+            <div class="pdf-render-container"></div>
+          </div>
+        </div>
+        <div class="page" id="page-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+          <div class="pdf-viewer" data-url={SocialStudiesPath}>
+            <div class="pdf-loading">Loading Social Studies...</div>
+            <div class="pdf-render-container"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+    
+    <div class="tabs-container" role="tablist" aria-orientation="vertical">
+      <button class="binder-tab tab-pink active interactive-element" id="tab-1" role="tab" aria-selected="true" aria-controls="page-1" data-target="page-1">
+        <span>The Smart Cookie</span>
+      </button>
+      <button class="binder-tab tab-lavender interactive-element" id="tab-2" role="tab" aria-selected="false" aria-controls="page-2" data-target="page-2">
+        <span>TPA Math</span>
+      </button>
+      <button class="binder-tab tab-purple interactive-element" id="tab-3" role="tab" aria-selected="false" aria-controls="page-3" data-target="page-3">
+        <span>Social Studies</span>
+      </button>
+    </div>
+  </main>
 
   <style is:global>
-    .back-button {
-      position: absolute;
-      top: 5%;
-      left: 3%;
-      z-index: 50;
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: rgba(255, 255, 255, 0.85);
-      color: #6d4c41;
-      font-weight: 700;
-      font-size: 1.2rem;
-      border-radius: 30px;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border: 3px solid rgba(255, 255, 255, 1);
-      transition: all 0.2s ease-out;
+    body {
+      background-color: #fafafa;
+      margin: 0;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Centered but protected by wrapper margins */
+      font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      padding: 20px;
     }
 
-    .back-button:hover {
-      background-color: #6d4c41;
-      color: white;
-      transform: scale(1.05);
-      border-color: #6d4c41;
+    .back-button {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #7c3aed; /* Lavender accent from recommendations */
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 4px 16px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
+
+    .back-button svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .back-button:hover, .back-button:focus-visible {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      outline: none;
+    }
+
+    .binder-wrapper {
+      position: relative;
+      width: 85vw;
+      max-width: 1100px;
+      height: 80vh;
+      display: flex;
+      align-items: stretch;
+      margin-top: 40px; 
+      /* Intensified multi-layered shadow for high contrast */
+      filter: 
+        drop-shadow(0 40px 120px rgba(0,0,0,0.35))
+        drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+      animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .binder-main {
+      flex-grow: 1;
+      background: rgba(255, 255, 255, 0.4); /* Glass base */
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 20px;
+      display: flex;
+      position: relative;
+      z-index: 2;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 
+        inset 0 1px 1px rgba(255,255,255,0.4),
+        inset 0 -1px 1px rgba(0,0,0,0.02);
+    }
+
+    .spine {
+      width: 64px;
+      background: rgba(167, 139, 250, 0.15); /* Clean lavender glass strip */
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 80px 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      border-radius: 18px 0 0 18px;
+    }
+
+    .hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.2),
+        0 0 0 4px rgba(255,255,255,0.2);
+    }
+
+    .content-area {
+      flex-grow: 1;
+      position: relative;
+      padding: 0; /* Clean display for PDF */
+      overflow: visible; /* Allow 3D rotation to overflow slightly */
+      background: rgba(255, 255, 255, 0.05);
+      perspective: 3000px; /* Enhanced 3D depth */
+    }
+
+    @media (max-width: 1024px) {
+      .binder-wrapper { width: 92vw; height: 85vh; margin-top: 60px; }
+      .back-button { top: 20px; left: 20px; width: 44px; height: 44px; }
+      .spine { width: 48px; padding: 60px 0; }
+    }
+
+    .page {
+      position: absolute;
+      inset: 20px; /* Restored binder paper margin */
+      background-color: white;
+      /* No shadow to stay flush with binder surface */
+      border-radius: 8px; /* Restored paper rounding */
+      opacity: 0;
+      pointer-events: none;
+      overflow-y: auto; /* Scrollable paper */
+      overflow-x: hidden;
+      
+      /* Disable default touch zoom */
+      touch-action: pan-y;
+      
+      /* Page Turn 3D Setup */
+      transform-origin: left center;
+      transform: rotateY(15deg) scale(0.98); 
+      transition: 
+        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.6s ease-in-out,
+        z-index 0.8s step-end;
+      
+      backface-visibility: hidden;
+      will-change: transform, opacity;
+      z-index: 1;
+    }
+
+    .page.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: rotateY(0deg) scale(1);
+      z-index: 10;
+      transition: 
+        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.4s ease-out,
+        z-index 0s step-start;
+    }
+
+    /* State for a page that has been "turned" to the left */
+    .page.turned-out {
+      transform: rotateY(-120deg) scale(0.95);
+      opacity: 0;
+      z-index: 0;
+    }
+
+    .pdf-viewer {
+      width: 100%;
+      min-height: 100%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pdf-render-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px; /* Tight stacking for a more cohesive look */
+      padding-bottom: 40px;
+    }
+
+    .pdf-render-container canvas {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      /* Subtle border to separate pages clearly without heavy bars */
+      border-bottom: 1px solid #f0f0f0; 
+      background: white;
+    }
+
+    .pdf-loading {
+      padding: 60px;
+      color: #999;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    .tabs-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 80px;
+      z-index: 1;
+    }
+
+    .binder-tab {
+      writing-mode: vertical-rl;
+      padding: 24px 10px;
+      min-height: 160px;
+      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-left: none;
+      border-radius: 0 16px 16px 0;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      left: -4px;
+      margin-bottom: 8px;
+      box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .tab-pink { background: rgba(244, 114, 182, 0.35); }
+    .tab-lavender { background: rgba(167, 139, 250, 0.35); }
+    .tab-purple { background: rgba(139, 92, 246, 0.35); }
+
+    .binder-tab:hover {
+      transform: translateX(8px);
+      backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.2);
+      color: #333;
+    }
+
+    .binder-tab.active {
+      width: 72px;
+      padding-left: 24px;
+      transform: translateX(6px);
+      z-index: 20;
+      box-shadow: 12px 0 30px rgba(0,0,0,0.1);
+      border-color: rgba(255,255,255,0.7);
+    }
+    
+    .tab-pink.active { background: rgba(244, 114, 182, 0.8); color: white; }
+    .tab-lavender.active { background: rgba(167, 139, 250, 0.8); color: white; }
+    .tab-purple.active { background: rgba(139, 92, 246, 0.8); color: white; }
+
+    .hovering-link { cursor: pointer; }
   </style>
 
-  <script>
+  <script is:inline>
+    async function loadPDF(viewer) {
+      const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+      if (!pdfjsLib) return;
+
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+      }
+
+      const url = viewer.dataset.url;
+      const container = viewer.querySelector('.pdf-render-container');
+      const loader = viewer.querySelector('.pdf-loading');
+      
+      if (!url || container.dataset.loaded === "true") return;
+
+      try {
+        const loadingTask = pdfjsLib.getDocument(url);
+        const pdf = await loadingTask.promise;
+        
+        container.innerHTML = '';
+        
+        // Account for Retina/high-resolution displays to prevent blurriness
+        const dpr = window.devicePixelRatio || 1;
+        
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          
+          const initialViewport = page.getViewport({ scale: 1 });
+          // Base scale for fitting width
+          const baseScale = (container.clientWidth) / initialViewport.width;
+          // Render scale includes DPR for clarity
+          const viewport = page.getViewport({ scale: baseScale * dpr });
+
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          
+          // Internal resolution
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          
+          // CSS display size
+          canvas.style.width = "100%";
+          canvas.style.height = "auto";
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport,
+            // Use visual viewport for high-quality rendering
+            intent: 'display'
+          };
+          
+          await page.render(renderContext).promise;
+          container.appendChild(canvas);
+        }
+        
+        container.dataset.loaded = "true";
+        if (loader) loader.style.display = 'none';
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        if (loader) loader.textContent = 'Failed to load PDF.';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Only attach mouse-driven effects on non-touch devices
-      const isTouchDevice =
-        window.matchMedia('(hover: none), (pointer: coarse)').matches ||
-        navigator.maxTouchPoints > 0;
+      const tabs = document.querySelectorAll('.binder-tab');
+      const pages = document.querySelectorAll('.page');
+      
+      // Wait for pdfjsLib to be available in case the CDN script loads slightly after DOMContentLoaded
+      const waitForLib = () => {
+        const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+        if (pdfjsLib) {
+          init();
+        } else {
+          console.log('Waiting for PDF.js library...');
+          setTimeout(waitForLib, 100);
+        }
+      };
 
-      if (!isTouchDevice) {
-        const interactiveElements = document.querySelectorAll('.interactive-element');
+      const init = () => {
+        // Initial load for active page
+        const activeViewer = document.querySelector('.page.active .pdf-viewer');
+        if (activeViewer) loadPDF(activeViewer);
 
-        interactiveElements.forEach(el => {
-          el.addEventListener('mouseenter', () => {
-            document.body.classList.add('hovering-link');
-          });
-          el.addEventListener('mouseleave', () => {
-            document.body.classList.remove('hovering-link');
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            const targetId = tab.getAttribute('data-target');
+            if (!targetId) return;
+
+            tabs.forEach(t => {
+              t.classList.remove('active');
+              t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            const targetIdx = parseInt(targetId.replace('page-', '')) - 1;
+
+            pages.forEach((p, idx) => {
+              p.classList.remove('active', 'turned-out');
+              
+              if (idx === targetIdx) {
+                p.classList.add('active');
+                p.removeAttribute('hidden');
+                // Trigger PDF load for this page
+                const viewer = p.querySelector('.pdf-viewer');
+                if (viewer) loadPDF(viewer);
+              } else if (idx < targetIdx) {
+                p.classList.add('turned-out');
+                setTimeout(() => {
+                  if (p.classList.contains('turned-out')) p.setAttribute('hidden', 'true');
+                }, 800);
+              } else {
+                setTimeout(() => {
+                  if (!p.classList.contains('active') && !p.classList.contains('turned-out')) {
+                    p.setAttribute('hidden', 'true');
+                  }
+                }, 800);
+              }
+            });
           });
         });
+      };
+
+      waitForLib();
+
+      const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+      if (!isTouchDevice) {
+        const interactiveElements = document.querySelectorAll('.interactive-element');
+        interactiveElements.forEach(el => {
+          el.addEventListener('mouseenter', () => document.body.classList.add('hovering-link'));
+          el.addEventListener('mouseleave', () => document.body.classList.remove('hovering-link'));
+        });
       }
+    });
+
+    // Handle window resize to re-scale PDFs
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.querySelectorAll('.pdf-render-container').forEach(container => {
+          container.dataset.loaded = "false";
+          const viewer = container.closest('.pdf-viewer');
+          const page = container.closest('.page');
+          if (page && page.classList.contains('active')) {
+            loadPDF(viewer);
+          }
+        });
+      }, 500);
     });
   </script>
 </body>
