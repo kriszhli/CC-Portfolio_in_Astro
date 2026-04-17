@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 
-// Simple paths to PDFs - we handle logic via PDF.js now
 const SmartCookiePath = `${import.meta.env.BASE_URL}/assets/PDFs/SmartCookie.pdf`;
 const MathPath = `${import.meta.env.BASE_URL}/assets/PDFs/Math.pdf`;
 const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies.pdf`;
@@ -14,12 +13,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}/favicon.png`} />
   <title>Lesson Plan - Ms. Qiao</title>
-  <!-- Load PDF.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
   
-  <!-- Back Button (Glassy circular button) -->
   <a href={import.meta.env.BASE_URL} class="back-button interactive-element" aria-label="Back to Desk">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -37,19 +34,19 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       <div class="content-area">
         <div class="page active" id="page-1" role="tabpanel" aria-labelledby="tab-1">
           <div class="pdf-viewer" data-url={SmartCookiePath}>
-            <div class="pdf-loading">Loading Lesson Plan...</div>
+            <div class="pdf-loading">Loading Reading & SEL Lesson...</div>
             <div class="pdf-render-container"></div>
           </div>
         </div>
         <div class="page" id="page-2" role="tabpanel" aria-labelledby="tab-2" hidden>
           <div class="pdf-viewer" data-url={MathPath}>
-            <div class="pdf-loading">Loading TPA Math...</div>
+            <div class="pdf-loading">Loading Math Lesson...</div>
             <div class="pdf-render-container"></div>
           </div>
         </div>
         <div class="page" id="page-3" role="tabpanel" aria-labelledby="tab-3" hidden>
           <div class="pdf-viewer" data-url={SocialStudiesPath}>
-            <div class="pdf-loading">Loading Social Studies...</div>
+            <div class="pdf-loading">Loading Social Studies Unit...</div>
             <div class="pdf-render-container"></div>
           </div>
         </div>
@@ -58,13 +55,13 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     
     <div class="tabs-container" role="tablist" aria-orientation="vertical">
       <button class="binder-tab tab-pink active interactive-element" id="tab-1" role="tab" aria-selected="true" aria-controls="page-1" data-target="page-1">
-        <span>The Smart Cookie</span>
+        <span>Reading & SEL Lesson: <i>The Smart Cookie</i></span>
       </button>
       <button class="binder-tab tab-lavender interactive-element" id="tab-2" role="tab" aria-selected="false" aria-controls="page-2" data-target="page-2">
-        <span>TPA Math</span>
+        <span>Math Lesson (3 Days): Bar Graphs (TPA)</span>
       </button>
       <button class="binder-tab tab-purple interactive-element" id="tab-3" role="tab" aria-selected="false" aria-controls="page-3" data-target="page-3">
-        <span>Social Studies</span>
+        <span>Social Studies Unit: “Why Do People March?” (UbD)</span>
       </button>
     </div>
   </main>
@@ -76,7 +73,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       min-height: 100dvh;
       display: flex;
       justify-content: center;
-      align-items: center; /* Centered but protected by wrapper margins */
+      align-items: center;
       font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
       overflow: hidden;
       padding: 20px;
@@ -95,7 +92,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      color: #7c3aed; /* Lavender accent from recommendations */
+      color: #7c3aed;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.5);
       box-shadow: 
@@ -124,7 +121,6 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       display: flex;
       align-items: stretch;
       margin-top: 40px; 
-      /* Intensified multi-layered shadow for high contrast */
       filter: 
         drop-shadow(0 40px 120px rgba(0,0,0,0.35))
         drop-shadow(0 10px 30px rgba(0,0,0,0.2));
@@ -138,22 +134,21 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
 
     .binder-main {
       flex-grow: 1;
-      background: rgba(255, 255, 255, 0.4); /* Glass base */
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-radius: 20px;
+      background: #ffffff;
+      border-radius: 20px 0 0 20px;
       display: flex;
       position: relative;
       z-index: 2;
-      border: 1px solid rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-right: none;
       box-shadow: 
-        inset 0 1px 1px rgba(255,255,255,0.4),
+        inset 0 1px 1px rgba(255,255,255,1),
         inset 0 -1px 1px rgba(0,0,0,0.02);
     }
 
     .spine {
       width: 64px;
-      background: rgba(167, 139, 250, 0.15); /* Clean lavender glass strip */
+      background: rgba(167, 139, 250, 0.15);
       border-right: 1px solid rgba(255, 255, 255, 0.3);
       display: flex;
       flex-direction: column;
@@ -178,10 +173,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     .content-area {
       flex-grow: 1;
       position: relative;
-      padding: 0; /* Clean display for PDF */
-      overflow: visible; /* Allow 3D rotation to overflow slightly */
+      padding: 0;
+      overflow: visible;
       background: rgba(255, 255, 255, 0.05);
-      perspective: 3000px; /* Enhanced 3D depth */
+      perspective: 3000px;
     }
 
     @media (max-width: 1024px) {
@@ -192,26 +187,20 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
 
     .page {
       position: absolute;
-      inset: 20px; /* Restored binder paper margin */
+      inset: 20px;
       background-color: white;
-      /* No shadow to stay flush with binder surface */
-      border-radius: 8px; /* Restored paper rounding */
+      border-radius: 8px;
       opacity: 0;
       pointer-events: none;
-      overflow-y: auto; /* Scrollable paper */
+      overflow-y: auto;
       overflow-x: hidden;
-      
-      /* Disable default touch zoom */
       touch-action: pan-y;
-      
-      /* Page Turn 3D Setup */
       transform-origin: left center;
       transform: rotateY(15deg) scale(0.98); 
       transition: 
         transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.6s ease-in-out,
         z-index 0.8s step-end;
-      
       backface-visibility: hidden;
       will-change: transform, opacity;
       z-index: 1;
@@ -249,7 +238,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px; /* Tight stacking for a more cohesive look */
+      gap: 4px;
       padding-bottom: 40px;
     }
 
@@ -257,7 +246,6 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       width: 100% !important;
       height: auto !important;
       display: block;
-      /* Subtle border to separate pages clearly without heavy bars */
       border-bottom: 1px solid #f0f0f0; 
       background: white;
     }
@@ -272,16 +260,18 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     .tabs-container {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      padding-top: 80px;
+      justify-content: center;
+      gap: 12px;
       z-index: 1;
+      height: 100%;
+      margin-left: -20px;
     }
 
     .binder-tab {
       writing-mode: vertical-rl;
-      padding: 24px 10px;
-      min-height: 160px;
-      width: 52px;
+      padding: 16px 12px 16px 28px;
+      min-height: 180px; 
+      width: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -290,16 +280,17 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       border-left: none;
       border-radius: 0 16px 16px 0;
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
       font-weight: 600;
       color: #fff;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
       position: relative;
-      left: -4px;
-      margin-bottom: 8px;
       box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+      text-align: center;
+      word-break: break-word;
     }
 
     .tab-pink { background: rgba(244, 114, 182, 0.35); }
@@ -307,16 +298,16 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     .tab-purple { background: rgba(139, 92, 246, 0.35); }
 
     .binder-tab:hover {
-      transform: translateX(8px);
+      transform: translateX(10px);
       backdrop-filter: blur(16px);
       background: rgba(255, 255, 255, 0.2);
       color: #333;
     }
 
     .binder-tab.active {
-      width: 72px;
-      padding-left: 24px;
-      transform: translateX(6px);
+      width: 88px;
+      padding-left: 36px;
+      transform: translateX(4px);
       z-index: 20;
       box-shadow: 12px 0 30px rgba(0,0,0,0.1);
       border-color: rgba(255,255,255,0.7);
