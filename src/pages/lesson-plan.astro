@@ -54,13 +54,15 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     </div>
     
     <div class="tabs-container" role="tablist" aria-orientation="vertical">
+      <div class="active-bloom"></div>
+      
       <button class="binder-tab tab-pink active interactive-element" id="tab-1" role="tab" aria-selected="true" aria-controls="page-1" data-target="page-1">
         <span>Reading & SEL Lesson: <i>The Smart Cookie</i></span>
       </button>
-      <button class="binder-tab tab-lavender interactive-element" id="tab-2" role="tab" aria-selected="false" aria-controls="page-2" data-target="page-2">
+      <button class="binder-tab tab-green interactive-element" id="tab-2" role="tab" aria-selected="false" aria-controls="page-2" data-target="page-2">
         <span>Math Lesson (3 Days): Bar Graphs (TPA)</span>
       </button>
-      <button class="binder-tab tab-purple interactive-element" id="tab-3" role="tab" aria-selected="false" aria-controls="page-3" data-target="page-3">
+      <button class="binder-tab tab-blue interactive-element" id="tab-3" role="tab" aria-selected="false" aria-controls="page-3" data-target="page-3">
         <span>Social Studies Unit: “Why Do People March?” (UbD)</span>
       </button>
     </div>
@@ -120,10 +122,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       height: 80vh;
       display: flex;
       align-items: stretch;
-      margin-top: 40px; 
+      margin-top: -20px; 
       filter: 
-        drop-shadow(10px 7px 3px rgba(0,0,0,0.65))
-        drop-shadow(20px 14px 7px rgba(0,0,0,0.15));
+        drop-shadow(10px 7px 5px rgba(0,0,0,0.65))
+        drop-shadow(20px 14px 10px rgba(0,0,0,0.15));
       animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
@@ -134,7 +136,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
 
     .binder-main {
       flex-grow: 1;
-      background: #ffffff;
+      background: transparent;
       border-radius: 20px 0 0 20px;
       display: flex;
       position: relative;
@@ -148,16 +150,50 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
 
     .spine {
       width: 64px;
-      background: rgba(167, 139, 250, 0.15);
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.5); 
+      border-right: 1px solid rgba(255, 255, 255, 0.5);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       padding: 80px 0;
       z-index: 10;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(8px);
       border-radius: 18px 0 0 18px;
+      transition: background 0.6s ease;
+      position: relative;
+    }
+
+    .binder-wrapper:has(#tab-1.active) .spine { background: rgba(244, 114, 182, 0.2); }
+    .binder-wrapper:has(#tab-2.active) .spine { background: rgba(134, 239, 172, 0.2); }
+    .binder-wrapper:has(#tab-3.active) .spine { background: rgba(147, 197, 253, 0.2); }
+
+    .spine::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 100%;
+      filter: blur(40px);
+      transition: all 0.6s ease;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .binder-wrapper:has(#tab-1.active) .spine::before { 
+      opacity: 0.18; 
+      background: radial-gradient(ellipse at center, rgba(244, 114, 182, 0.4), transparent 70%); 
+    }
+    .binder-wrapper:has(#tab-2.active) .spine::before { 
+      opacity: 0.18; 
+      background: radial-gradient(ellipse at center, rgba(134, 239, 172, 0.4), transparent 70%); 
+    }
+    .binder-wrapper:has(#tab-3.active) .spine::before { 
+      opacity: 0.18; 
+      background: radial-gradient(ellipse at center, rgba(147, 197, 253, 0.4), transparent 70%); 
     }
 
     .hole {
@@ -175,7 +211,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       position: relative;
       padding: 0;
       overflow: visible;
-      background: rgba(255, 255, 255, 0.05);
+      background: #ffffff;
       perspective: 3000px;
     }
 
@@ -265,6 +301,40 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       z-index: 1;
       height: 100%;
       margin-left: -20px;
+      position: relative;
+    }
+
+    .active-bloom {
+      position: absolute;
+      left: 0;
+      transform: translate(-30%, -50%);
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0;
+      transition: 
+        opacity 0.8s ease,
+        top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.6s ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .tabs-container:has(#tab-1.active) .active-bloom { 
+      top: 18%; 
+      opacity: 0.18; 
+      background: radial-gradient(circle, rgba(255, 0, 132) 0%); 
+    }
+    .tabs-container:has(#tab-2.active) .active-bloom { 
+      top: 50%; 
+      opacity: 0.18; 
+      background: radial-gradient(circle, rgba(0, 255, 94) 0%); 
+    }
+    .tabs-container:has(#tab-3.active) .active-bloom { 
+      top: 82%; 
+      opacity: 0.18; 
+      background: radial-gradient(circle, rgba(0, 119, 255) 0%); 
     }
 
     .binder-tab {
@@ -283,9 +353,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       font-size: 0.85rem;
       line-height: 1.4;
       font-weight: 600;
-      color: #fff;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      color: #777;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
       position: relative;
       box-shadow: 4px 0 10px rgba(0,0,0,0.05);
@@ -293,15 +364,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       word-break: break-word;
     }
 
-    .tab-pink { background: rgba(244, 114, 182, 0.35); }
-    .tab-lavender { background: rgba(167, 139, 250, 0.35); }
-    .tab-purple { background: rgba(139, 92, 246, 0.35); }
-
     .binder-tab:hover {
       transform: translateX(10px);
-      backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.2);
-      color: #333;
+      color: #000; 
+      background: rgba(255, 255, 255, 0.6);
     }
 
     .binder-tab.active {
@@ -311,11 +377,12 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       z-index: 20;
       box-shadow: 12px 0 30px rgba(0,0,0,0.1);
       border-color: rgba(255,255,255,0.7);
+      color: white;
     }
     
-    .tab-pink.active { background: rgba(244, 114, 182, 0.8); color: white; }
-    .tab-lavender.active { background: rgba(167, 139, 250, 0.8); color: white; }
-    .tab-purple.active { background: rgba(139, 92, 246, 0.8); color: white; }
+    .tab-pink.active { background: rgba(244, 114, 182, 0.5); }
+    .tab-green.active { background: rgba(134, 239, 172, 0.5); }
+    .tab-blue.active { background: rgba(147, 197, 253, 0.5); }
 
     .hovering-link { cursor: pointer; }
   </style>
