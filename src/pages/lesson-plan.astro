@@ -122,8 +122,8 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       align-items: stretch;
       margin-top: 40px; 
       filter: 
-        drop-shadow(0 40px 120px rgba(0,0,0,0.35))
-        drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+        drop-shadow(10px 7px 3px rgba(0,0,0,0.65))
+        drop-shadow(20px 14px 7px rgba(0,0,0,0.15));
       animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
@@ -161,13 +161,13 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     }
 
     .hole {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.1);
       box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.2),
-        0 0 0 4px rgba(255,255,255,0.2);
+        inset 0 4px 10px rgba(0,0,0,0.4),
+        0 1px 1px rgba(255,255,255,0.2);
     }
 
     .content-area {
@@ -340,34 +340,24 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
         const pdf = await loadingTask.promise;
         
         container.innerHTML = '';
-        
-        // Account for Retina/high-resolution displays to prevent blurriness
         const dpr = window.devicePixelRatio || 1;
         
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
           const page = await pdf.getPage(pageNum);
-          
           const initialViewport = page.getViewport({ scale: 1 });
-          // Base scale for fitting width
           const baseScale = (container.clientWidth) / initialViewport.width;
-          // Render scale includes DPR for clarity
           const viewport = page.getViewport({ scale: baseScale * dpr });
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
-          
-          // Internal resolution
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-          
-          // CSS display size
           canvas.style.width = "100%";
           canvas.style.height = "auto";
 
           const renderContext = {
             canvasContext: context,
             viewport: viewport,
-            // Use visual viewport for high-quality rendering
             intent: 'display'
           };
           
@@ -387,19 +377,16 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       const tabs = document.querySelectorAll('.binder-tab');
       const pages = document.querySelectorAll('.page');
       
-      // Wait for pdfjsLib to be available in case the CDN script loads slightly after DOMContentLoaded
       const waitForLib = () => {
         const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
         if (pdfjsLib) {
           init();
         } else {
-          console.log('Waiting for PDF.js library...');
           setTimeout(waitForLib, 100);
         }
       };
 
       const init = () => {
-        // Initial load for active page
         const activeViewer = document.querySelector('.page.active .pdf-viewer');
         if (activeViewer) loadPDF(activeViewer);
 
@@ -423,7 +410,6 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
               if (idx === targetIdx) {
                 p.classList.add('active');
                 p.removeAttribute('hidden');
-                // Trigger PDF load for this page
                 const viewer = p.querySelector('.pdf-viewer');
                 if (viewer) loadPDF(viewer);
               } else if (idx < targetIdx) {
@@ -455,7 +441,6 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       }
     });
 
-    // Handle window resize to re-scale PDFs
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
