@@ -3,7 +3,9 @@ body {
   margin: 0;
   padding: 0;
   width: 100vw;
-  height: 100vh;
+  height: var(--app-height, 100vh);
+  min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   background-color: #f7eed7;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -12,7 +14,9 @@ body {
 .diorama-wrapper {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: var(--app-height, 100vh);
+  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,9 +25,11 @@ body {
 .diorama {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: var(--app-height, 100vh);
+  min-height: 100svh;
+  min-height: 100dvh;
   max-height: calc(100vw * (11 / 16));
-  max-width: calc(100vh * (16 / 7));
+  max-width: calc(var(--app-height, 100vh) * (16 / 7));
   margin: auto;
   overflow: hidden;
   background-image: url('../assets/PNGs/Background.png');

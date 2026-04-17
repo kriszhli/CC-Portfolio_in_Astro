@@ -162,6 +162,8 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
       height: 85%;
       transform: translate(-50%, -50%) scale(0.05);
       transform-origin: center center;
+      will-change: transform, top, left, opacity;
+      backface-visibility: hidden;
       z-index: 9;
       opacity: 1;
       visibility: hidden;
@@ -259,7 +261,7 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         max-width: none !important;
         max-height: none !important;
         width: 100vw !important;
-        height: 100vh !important;
+        height: var(--app-height, 100dvh) !important;
         background-size: cover !important;
         background-position: center bottom !important;
         box-shadow: inset 0 0 80px 30px #f7eed7 !important;
@@ -291,13 +293,13 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
          Pre-positioned at animation start state to prevent rendering flash on real devices.
          Animated props intentionally lack !important so @keyframes can override them. */
       #pdf-container {
-        width: min(88vw, calc((88vh - 40px) * 8.5 / 11)) !important;
+        width: min(calc(100vw - 24px), calc((var(--app-height, 100dvh) - 40px) * 8.5 / 11)) !important;
         height: auto !important;
         aspect-ratio: 8.5 / 11 !important;
         z-index: 50 !important;
         top: 25%;
         left: 71%;
-        transform: translate(-50%, -50%) scale(0.15);
+        transform: translate3d(-50%, -50%, 0) scale(0.15);
         opacity: 0;
         transition: none !important;
       }
@@ -372,20 +374,30 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
     }
 
     @keyframes mobilePdfOpen {
-      0%  { top: 25%; left: 71%; transform: translate(-50%, -50%) scale(0.15); opacity: 0; }
+      0%  { top: 25%; left: 71%; transform: translate3d(-50%, -50%, 0) scale(0.15); opacity: 0; }
       30% { opacity: 0.9; }
-      100% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0) scale(1); opacity: 1; }
     }
 
     @keyframes mobilePdfClose {
-      0%  { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      0%  { top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0) scale(1); opacity: 1; }
       70% { opacity: 0.1; }
-      100% { top: 25%; left: 71%; transform: translate(-50%, -50%) scale(0.15); opacity: 0; }
+      100% { top: 25%; left: 71%; transform: translate3d(-50%, -50%, 0) scale(0.15); opacity: 0; }
     }
   </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const syncViewportHeight = () => {
+        const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', `${viewportHeight}px`);
+      };
+
+      syncViewportHeight();
+      window.addEventListener('resize', syncViewportHeight);
+      window.visualViewport?.addEventListener('resize', syncViewportHeight);
+      window.visualViewport?.addEventListener('scroll', syncViewportHeight);
+
       const fadeOverlay = document.getElementById('white-fade-overlay');
       if (fadeOverlay) setTimeout(() => { fadeOverlay.style.opacity = '0'; }, 50);
 
