@@ -27,5 +27,9 @@ lerna-debug.log*
 # Astro files
 .astro/
 
+# Codex agent workspace
+.agents/
+skills-lock.json
+
 # Local backup
 Local_Backup/
