@@ -214,6 +214,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       overflow: visible;
       background: #ffffff;
       perspective: 3000px;
+      isolation: isolate;
     }
 
     @media (max-width: 1024px) {
@@ -223,6 +224,11 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     }
 
     .page {
+      --page-flip-duration: 1080ms;
+      --page-fade-in-duration: 320ms;
+      --page-fade-out-duration: 220ms;
+      --page-fade-in-delay: 220ms;
+      --page-fade-out-delay: 360ms;
       position: absolute;
       inset: 20px;
       background-color: white;
@@ -233,13 +239,15 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       overflow-x: hidden;
       touch-action: pan-y;
       transform-origin: left center;
-      transform: rotateY(15deg) scale(0.98); 
+      transform: rotateY(12deg) scale(0.985);
       transition: 
-        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.6s ease-in-out,
-        z-index 0.8s step-end;
+        transform var(--page-flip-duration) cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity var(--page-fade-out-duration) ease-in var(--page-fade-out-delay);
       backface-visibility: hidden;
       will-change: transform, opacity;
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.04),
+        0 18px 40px rgba(15, 23, 42, 0.08);
       z-index: 1;
     }
 
@@ -247,18 +255,19 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       opacity: 1;
       pointer-events: auto;
       transform: rotateY(0deg) scale(1);
-      z-index: 10;
+      z-index: 2;
       transition: 
-        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.4s ease-out,
-        z-index 0s step-start;
+        transform var(--page-flip-duration) cubic-bezier(0.16, 1, 0.3, 1),
+        opacity var(--page-fade-in-duration) ease-out var(--page-fade-in-delay);
     }
 
-    /* State for a page that has been "turned" to the left */
     .page.turned-out {
       transform: rotateY(-120deg) scale(0.95);
       opacity: 0;
-      z-index: 0;
+      z-index: 3;
+      transition:
+        transform var(--page-flip-duration) cubic-bezier(0.55, 0.06, 0.68, 0.19),
+        opacity var(--page-fade-out-duration) ease-in var(--page-fade-out-delay);
     }
 
     .pdf-viewer {
@@ -445,6 +454,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     document.addEventListener('DOMContentLoaded', () => {
       const tabs = document.querySelectorAll('.binder-tab');
       const pages = document.querySelectorAll('.page');
+      const PAGE_FLIP_DURATION = 1080;
       
       const waitForLib = () => {
         const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
@@ -464,6 +474,9 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
             const targetId = tab.getAttribute('data-target');
             if (!targetId) return;
 
+            const currentPage = document.querySelector('.page.active');
+            if (currentPage?.id === targetId) return;
+
             tabs.forEach(t => {
               t.classList.remove('active');
               t.setAttribute('aria-selected', 'false');
@@ -471,28 +484,32 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
             tab.classList.add('active');
             tab.setAttribute('aria-selected', 'true');
 
-            const targetIdx = parseInt(targetId.replace('page-', '')) - 1;
+            pages.forEach((p) => {
+              const isTarget = p.id === targetId;
+              const isCurrent = currentPage && p === currentPage;
 
-            pages.forEach((p, idx) => {
               p.classList.remove('active', 'turned-out');
-              
-              if (idx === targetIdx) {
-                p.classList.add('active');
+
+              if (isTarget) {
                 p.removeAttribute('hidden');
+                requestAnimationFrame(() => {
+                  p.classList.add('active');
+                });
                 const viewer = p.querySelector('.pdf-viewer');
                 if (viewer) loadPDF(viewer);
-              } else if (idx < targetIdx) {
-                p.classList.add('turned-out');
-                setTimeout(() => {
-                  if (p.classList.contains('turned-out')) p.setAttribute('hidden', 'true');
-                }, 800);
-              } else {
-                setTimeout(() => {
-                  if (!p.classList.contains('active') && !p.classList.contains('turned-out')) {
-                    p.setAttribute('hidden', 'true');
-                  }
-                }, 800);
+                return;
               }
+
+              if (isCurrent) {
+                p.removeAttribute('hidden');
+                p.classList.add('turned-out');
+              }
+
+              setTimeout(() => {
+                if (!p.classList.contains('active')) {
+                  p.setAttribute('hidden', 'true');
+                }
+              }, PAGE_FLIP_DURATION);
             });
           });
         });
