@@ -66,3 +66,11 @@ GitHub Pages is configured to deploy from the Actions source in the repository s
 - **Glass & lighting** — unified glassmorphism system across spine and tabs; reactive light blooms and spine tint shift color (pink → green → blue) based on the active lesson.
 - **PDF.js pipeline** — custom canvas renderer replaces `<iframe>` embeds; pages scale to fit width at `devicePixelRatio` resolution with lazy loading per tab and debounced resize re-rendering.
 - **Animations** — 3D `rotateY` page-turn on tab switch; smooth tab slide, color, and bloom transitions throughout.
+
+### Lesson Plan & Recommendations Refinements (04/17/2026)
+
+- **Binder page-flip fix** — corrected the 3D `rotateY` page-turn animation sequencing so pages always complete their exit before the next page enters.
+- **Tab scroll reset** — switching binder tabs now scrolls the PDF viewer back to the top of the document.
+- **Lesson-plan → home transition** — added a white-fade-out on the back button click to match the rest of the site's navigation feel; removed legacy custom cursor code.
+- **Mobile resume viewport** — resolved remaining glitch where the PDF container could overflow the screen; CSS cascade order fixed so portrait-specific overrides reliably win over shared styles; `global.css` viewport geometry tightened.
+- **Recommendations magnifier** — desktop view now has a drag-to-pan magnifying viewport that renders a zoomed-in region of the currently selected letter; hover to reveal, drag to move the focus point.
