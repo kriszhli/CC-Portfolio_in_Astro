@@ -16,6 +16,7 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
+  <div id="white-fade-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.8s ease-out;"></div>
   
   <a href={import.meta.env.BASE_URL} class="back-button interactive-element" aria-label="Back to Desk">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
@@ -38,13 +39,13 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
             <div class="pdf-render-container"></div>
           </div>
         </div>
-        <div class="page" id="page-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+        <div class="page" id="page-2" role="tabpanel" aria-labelledby="tab-2" aria-hidden="true" inert>
           <div class="pdf-viewer" data-url={MathPath}>
             <div class="pdf-loading">Loading Math Lesson...</div>
             <div class="pdf-render-container"></div>
           </div>
         </div>
-        <div class="page" id="page-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+        <div class="page" id="page-3" role="tabpanel" aria-labelledby="tab-3" aria-hidden="true" inert>
           <div class="pdf-viewer" data-url={SocialStudiesPath}>
             <div class="pdf-loading">Loading Social Studies Unit...</div>
             <div class="pdf-render-container"></div>
@@ -235,9 +236,8 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
       border-radius: 8px;
       opacity: 0;
       pointer-events: none;
-      overflow-y: auto;
-      overflow-x: hidden;
-      touch-action: pan-y;
+      overflow: hidden;
+      overflow-anchor: none;
       transform-origin: left center;
       transform: rotateY(12deg) scale(0.985);
       transition: 
@@ -272,11 +272,18 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
 
     .pdf-viewer {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
+      min-height: 0;
       background: white;
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overflow-anchor: none;
+      overscroll-behavior: contain;
+      scroll-behavior: auto;
+      touch-action: pan-y;
     }
 
     .pdf-render-container {
@@ -452,9 +459,63 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('white-fade-overlay');
+      const backButton = document.querySelector('.back-button');
       const tabs = document.querySelectorAll('.binder-tab');
       const pages = document.querySelectorAll('.page');
       const PAGE_FLIP_DURATION = 1080;
+
+      if (overlay) {
+        setTimeout(() => {
+          overlay.style.opacity = '0';
+        }, 50);
+      }
+
+      if (backButton && overlay) {
+        backButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetHref = backButton.getAttribute('href');
+
+          document.body.style.pointerEvents = 'none';
+          overlay.style.transition = 'opacity 0.2s ease';
+          overlay.style.opacity = '1';
+
+          setTimeout(() => {
+            window.location.href = targetHref;
+          }, 150);
+        });
+      }
+
+      const resetPageScroll = (page) => {
+        page.scrollTop = 0;
+        page.scrollLeft = 0;
+
+        const viewer = page.querySelector('.pdf-viewer');
+        if (!viewer) return;
+
+        viewer.scrollTop = 0;
+        viewer.scrollLeft = 0;
+      };
+
+      const schedulePageScrollReset = (page) => {
+        resetPageScroll(page);
+        requestAnimationFrame(() => {
+          resetPageScroll(page);
+          requestAnimationFrame(() => resetPageScroll(page));
+        });
+        setTimeout(() => resetPageScroll(page), 80);
+      };
+
+      const activatePage = (page) => {
+        page.removeAttribute('aria-hidden');
+        page.removeAttribute('inert');
+        page.classList.add('active');
+      };
+
+      const deactivatePage = (page) => {
+        page.setAttribute('aria-hidden', 'true');
+        page.setAttribute('inert', '');
+      };
       
       const waitForLib = () => {
         const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
@@ -475,7 +536,10 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
             if (!targetId) return;
 
             const currentPage = document.querySelector('.page.active');
-            if (currentPage?.id === targetId) return;
+            if (currentPage?.id === targetId) {
+              schedulePageScrollReset(currentPage);
+              return;
+            }
 
             tabs.forEach(t => {
               t.classList.remove('active');
@@ -491,23 +555,29 @@ const SocialStudiesPath = `${import.meta.env.BASE_URL}/assets/PDFs/SocialStudies
               p.classList.remove('active', 'turned-out');
 
               if (isTarget) {
-                p.removeAttribute('hidden');
+                p.removeAttribute('aria-hidden');
+                p.removeAttribute('inert');
+                schedulePageScrollReset(p);
                 requestAnimationFrame(() => {
-                  p.classList.add('active');
+                  activatePage(p);
+                  schedulePageScrollReset(p);
                 });
                 const viewer = p.querySelector('.pdf-viewer');
-                if (viewer) loadPDF(viewer);
+                if (viewer) {
+                  loadPDF(viewer).finally(() => schedulePageScrollReset(p));
+                }
                 return;
               }
 
               if (isCurrent) {
-                p.removeAttribute('hidden');
                 p.classList.add('turned-out');
               }
 
               setTimeout(() => {
                 if (!p.classList.contains('active')) {
-                  p.setAttribute('hidden', 'true');
+                  resetPageScroll(p);
+                  deactivatePage(p);
+                  p.classList.remove('turned-out');
                 }
               }, PAGE_FLIP_DURATION);
             });

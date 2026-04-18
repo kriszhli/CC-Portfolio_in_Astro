@@ -548,16 +548,20 @@ import ResumeDoc from '../assets/PNGs/Resume_doc.png';
         });
       }
 
-      const recBtn = document.getElementById('rec-btn');
-      if (recBtn) {
-        recBtn.addEventListener('click', (e) => {
+      const fadeTransitionLinks = [
+        document.getElementById('rec-btn'),
+        document.getElementById('btn-lessonplan')
+      ].filter(Boolean);
+
+      fadeTransitionLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
           e.preventDefault();
-          const targetHref = recBtn.getAttribute('href');
+          const targetHref = link.getAttribute('href');
           document.body.style.pointerEvents = 'none';
           fadeOverlay.style.opacity = '1';
           setTimeout(() => { window.location.href = targetHref; }, 150);
         });
-      }
+      });
     });
   </script>
 </body>
