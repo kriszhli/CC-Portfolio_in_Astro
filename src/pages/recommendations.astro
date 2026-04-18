@@ -147,20 +147,63 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       width: 100%;
     }
 
+    .right-col {
+      display: none;
+    }
+
     /* Desktop layout */
     @media (min-width: 1024px) {
+      body {
+        --closed-viewer-width: min(calc(100vw - 32px), calc(65vh * (52 / 68)), 520px);
+        --open-viewer-width: min(68vw, calc(100vw - 460px), 980px);
+        --side-gap: clamp(64px, 8vw, 140px);
+        --toggle-width: 160px;
+        --mag-width: 58px;
+        --side-shift: calc((var(--open-viewer-width) - var(--closed-viewer-width)) / 2);
+      }
+
       .page-layout {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        gap: 0;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: none;
       }
       .left-col {
-        grid-column: 1;
+        position: fixed;
+        top: 50%;
+        left: calc(50vw - (var(--closed-viewer-width) / 2) - var(--side-gap) - (var(--toggle-width) / 2));
         justify-content: center;
-        padding-right: 80px; /* Pushes toggle more to the left */
+        transform: translate3d(0, -50%, 0);
+        transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        will-change: transform;
       }
       .center-col {
-        grid-column: 2;
+        width: var(--closed-viewer-width);
+        position: relative;
+        display: grid;
+        grid-template-rows: auto auto;
+        justify-items: center;
+        transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .right-col {
+        position: fixed;
+        top: 50%;
+        right: calc(50vw - (var(--closed-viewer-width) / 2) - var(--side-gap) - (var(--mag-width) / 2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate3d(0, -50%, 0);
+        transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        will-change: transform;
+      }
+      body.viewer-open .center-col {
+        width: var(--open-viewer-width);
+      }
+      body.viewer-open .left-col {
+        transform: translate3d(calc(var(--side-shift) * -1), -50%, 0);
+      }
+      body.viewer-open .right-col {
+        transform: translate3d(var(--side-shift), -50%, 0);
       }
     }
 
@@ -176,6 +219,134 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       perspective: 1200px; /* Enhanced depth */
       cursor: pointer; /* Indicates it's clickable */
       -webkit-tap-highlight-color: transparent;
+    }
+
+    .letter-viewer { display: none; }
+
+    .viewer-inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #faf9f6;
+      border-radius: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #999 transparent;
+    }
+
+    .viewer-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .magnify-btn {
+      width: 58px;
+      height: 58px;
+      border: 1px solid var(--accent-glass-border);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--accent-deep);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow:
+        0 10px 28px rgba(0,0,0,0.12),
+        0 2px 7px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.75);
+      transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  background 0.3s ease,
+                  border-color 0.4s ease,
+                  color 0.4s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .magnify-btn:hover {
+      transform: scale(1.06);
+      background: rgba(255,255,255,0.94);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.16),
+        0 3px 10px rgba(0,0,0,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+    }
+
+    .magnify-btn:active { transform: scale(0.94); }
+    .magnify-btn svg {
+      width: 26px;
+      height: 26px;
+      position: absolute;
+      transition: opacity 0.32s ease, transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .magnify-open-icon { opacity: 1; transform: scale(1) rotate(0deg); }
+    .magnify-close-icon { opacity: 0; transform: scale(0.72) rotate(-45deg); }
+
+    @media (min-width: 1024px) {
+      .stack-area {
+        grid-row: 1;
+        grid-column: 1;
+        transition: opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .letter-viewer {
+        display: block;
+        grid-row: 1;
+        grid-column: 1;
+        width: var(--closed-viewer-width);
+        max-width: 980px;
+        height: min(65vh, 680px);
+        background: var(--accent-glass);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 6px solid var(--accent-glass-border);
+        border-radius: 12px;
+        box-shadow:
+          0 8px 24px rgba(0,0,0,0.10),
+          0 2px 6px rgba(0,0,0,0.06),
+          inset 0 2px 4px rgba(255,255,255,0.3),
+          inset 0 -1px 2px rgba(0,0,0,0.04),
+          0 0 0 1px rgba(255,255,255,0.08);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.94);
+        transform-origin: center center;
+        pointer-events: none;
+        transition: opacity 0.5s ease,
+                    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    border-color 0.4s ease,
+                    width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    visibility 0s linear 0.5s;
+      }
+
+      .controls {
+        grid-row: 2;
+        grid-column: 1;
+        transition: opacity 0.4s ease, box-shadow 0.3s ease;
+      }
+
+      body.viewer-open .stack-area {
+        opacity: 0;
+        transform: scale(0.94);
+        pointer-events: none;
+      }
+
+      body.viewer-open .letter-viewer {
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+        pointer-events: auto;
+        transition-delay: 0s;
+      }
+
+      body.viewer-open .magnify-open-icon { opacity: 0; transform: scale(0.72) rotate(45deg); }
+      body.viewer-open .magnify-close-icon { opacity: 1; transform: scale(1) rotate(0deg); }
     }
 
     /* lor-img: JS-injected images. */
@@ -432,6 +603,11 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
     <!-- CENTER col: stack + controls -->
     <div class="center-col">
       <div class="stack-area" id="stack-area"></div>
+      <div class="letter-viewer" id="letter-viewer" aria-hidden="true">
+        <div class="viewer-inner" id="viewer-inner">
+          <img class="viewer-img" id="viewer-img" alt="Selected letter of recommendation" draggable="false" />
+        </div>
+      </div>
       <div class="controls">
         <button class="arrow" id="prev-btn" aria-label="Previous">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -445,6 +621,19 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
           </svg>
         </button>
       </div>
+    </div>
+
+    <!-- RIGHT col: desktop magnifier -->
+    <div class="right-col">
+      <button class="magnify-btn" id="magnify-btn" aria-label="Open enlarged letter view" aria-expanded="false">
+        <svg class="magnify-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M16.5 16.5L21 21"></path>
+        </svg>
+        <svg class="magnify-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -468,9 +657,26 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       const counterEl = document.getElementById('counter');
       const prevBtn   = document.getElementById('prev-btn');
       const nextBtn   = document.getElementById('next-btn');
+      const magnifyBtn = document.getElementById('magnify-btn');
+      const viewerEl = document.getElementById('letter-viewer');
+      const viewerInner = document.getElementById('viewer-inner');
+      const viewerImg = document.getElementById('viewer-img');
+      const desktopQuery = window.matchMedia('(min-width: 1024px)');
 
       // ── Stack rendering (linear fan) ────────────────────────────────────
       const ALL_FAN = ['fan-active','fan-left-1','fan-left-2','fan-left-3','fan-right-1','fan-right-2','fan-right-3','fan-hidden'];
+
+      function syncViewer(resetScroll = false) {
+        if (!viewerImg || !images[idx]) return;
+        if (viewerImg.getAttribute('src') !== images[idx]) {
+          viewerImg.src = images[idx];
+        }
+        viewerImg.alt = `${mode === 'professional' ? 'Professional' : 'Student'} letter of recommendation ${numMap[idx]} of ${total}`;
+        if (resetScroll && viewerInner) {
+          viewerInner.scrollTop = 0;
+          viewerInner.scrollLeft = 0;
+        }
+      }
 
       function render() {
         imgEls.forEach((el, i) => {
@@ -489,6 +695,7 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
           }
         });
         counterEl.textContent = `${numMap[idx]}/${total}`;
+        syncViewer(true);
       }
 
       function buildStack() {
@@ -511,6 +718,34 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
       function goPrev() { if (idx > 0) { idx--; render(); } }
       function goNext() { if (idx < images.length - 1) { idx++; render(); } }
 
+      function closeViewer() {
+        document.body.classList.remove('viewer-open');
+        if (magnifyBtn) {
+          magnifyBtn.setAttribute('aria-expanded', 'false');
+          magnifyBtn.setAttribute('aria-label', 'Open enlarged letter view');
+        }
+        if (viewerEl) viewerEl.setAttribute('aria-hidden', 'true');
+      }
+
+      function openViewer() {
+        if (!desktopQuery.matches) return;
+        syncViewer(true);
+        document.body.classList.add('viewer-open');
+        if (magnifyBtn) {
+          magnifyBtn.setAttribute('aria-expanded', 'true');
+          magnifyBtn.setAttribute('aria-label', 'Close enlarged letter view');
+        }
+        if (viewerEl) viewerEl.setAttribute('aria-hidden', 'false');
+      }
+
+      function toggleViewer() {
+        if (document.body.classList.contains('viewer-open')) {
+          closeViewer();
+        } else {
+          openViewer();
+        }
+      }
+
       function setMode(newMode) {
         if (mode === newMode) return;
         mode = newMode;
@@ -528,6 +763,16 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
 
       prevBtn.addEventListener('click', (e) => { e.stopPropagation(); goPrev(); });
       nextBtn.addEventListener('click', (e) => { e.stopPropagation(); goNext(); });
+      if (magnifyBtn) {
+        magnifyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleViewer();
+        });
+      }
+
+      desktopQuery.addEventListener('change', (event) => {
+        if (!event.matches) closeViewer();
+      });
 
       // Handle raw area clicks directly (left half vs right half)
       function handleAreaClick(e, el) {
@@ -552,6 +797,7 @@ const stuSrcs  = [LOR_Stu_1.src, LOR_Stu_2.src, LOR_Stu_3.src];
         else if (e.key === 'ArrowRight') goNext();
         else if (e.key === 'ArrowUp') setMode('professional');
         else if (e.key === 'ArrowDown') setMode('student');
+        else if (e.key === 'Escape') closeViewer();
       });
 
       // ── Toggle (also switches body theme class for color vars) ────────
